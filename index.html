@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日本アニメ・ゲーム協会 (JAGA)</title>
-    <!-- 字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+    <!-- 核心修复：完整引入日文、中文的黑体，以及英文的 Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
     <style>
         /* ================= 基础重置 & 赛博朋克配色 ================= */
         :root {
-            --bg-color: #05050A; /* 更深的夜黑 */
+            --bg-color: #05050A;
             --card-bg: rgba(15, 15, 25, 0.8);
             --neon-pink: #FF3D7F;
             --neon-cyan: #00E5FF;
@@ -18,16 +18,20 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* --- 核心：次元笔鼠标光标 --- */
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Noto Sans JP', 'PingFang SC', sans-serif;
+            /* 加上系统默认字体兜底，保证任何设备都不乱码 */
+            font-family: 'Noto Sans JP', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             overflow-x: hidden;
-            /* 自定义霓虹星芒 SVG 光标 (热点在中心) */
+            /* 字体抗锯齿，消除毛边 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            /* 自定义霓虹星芒光标 */
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%23FF3D7F"/></svg>') 12 12, auto;
         }
-        /* 链接悬停时的光标 (青色) */
+        
         a, button, .lang-btn, .card {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%2300E5FF"/><circle cx="12" cy="12" r="3" fill="%23FFF"/></svg>') 16 16, pointer !important;
         }
@@ -38,9 +42,7 @@
             background-image: 
                 linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -2;
-            perspective: 500px;
+            background-size: 40px 40px; z-index: -2; perspective: 500px;
             animation: gridMove 10s linear infinite;
         }
         .bg-scanlines {
@@ -92,12 +94,11 @@
             transition: all 0.5s ease;
         }
         .lang-btn {
-            font-size: 1.2rem; font-family: 'Orbitron', 'Noto Sans JP', sans-serif;
+            font-size: 1.2rem; font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
             color: var(--neon-cyan); text-decoration: none; text-align: center;
             border: 2px solid rgba(0, 229, 255, 0.4); padding: 15px 60px; 
             background: rgba(0, 0, 0, 0.6); transition: all 0.3s;
-            letter-spacing: 2px;
-            /* 朋克切割边角 */
+            letter-spacing: 2px; font-weight: 700;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
         .lang-btn:hover {
@@ -114,27 +115,38 @@
         }
         .portal-gate.open { opacity: 1; transform: scale(1); }
         
-        /* 故障风(Glitch)标题 */
+        /* 故障风(Glitch)标题 - 修复了粗细不均的问题 */
         .portal-title {
             font-size: 3rem; color: var(--neon-pink);
-            text-shadow: 0 0 10px rgba(255, 61, 127, 0.8), 2px 0 0 rgba(0,229,255,0.8), -2px 0 0 rgba(255,0,0,0.8);
-            margin-bottom: 1rem; font-weight: 900; letter-spacing: 4px;
+            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            font-weight: 900; /* 强制最粗 */
+            letter-spacing: 4px;
+            /* 调整了错位和发光，让字更实、不那么糊 */
+            text-shadow: 
+                0 0 20px rgba(255, 61, 127, 0.9), 
+                1px 0 0 rgba(0, 229, 255, 0.8), 
+                -1px 0 0 rgba(255, 0, 0, 0.8);
+            margin-bottom: 1rem;
             animation: glitch 3s infinite alternate;
         }
         @keyframes glitch {
-            0% { text-shadow: 0 0 10px rgba(255, 61, 127, 0.8), 2px 0 0 rgba(0,229,255,0.8), -2px 0 0 rgba(255,0,0,0.8); }
-            50% { text-shadow: 0 0 15px rgba(255, 61, 127, 1), -2px 0 0 rgba(0,229,255,0.8), 2px 0 0 rgba(255,0,0,0.8); }
-            100% { text-shadow: 0 0 10px rgba(255, 61, 127, 0.8), 2px 0 0 rgba(0,229,255,0.8), -2px 0 0 rgba(255,0,0,0.8); }
+            0% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); }
+            50% { text-shadow: 0 0 25px rgba(255, 61, 127, 1), -1px 0 0 rgba(0,229,255,0.8), 1px 0 0 rgba(255,0,0,0.8); }
+            100% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); }
         }
 
         .portal-subtitle {
             font-size: 1.2rem; color: var(--neon-cyan);
+            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            font-weight: 700;
             text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); margin-bottom: 2.5rem;
         }
         .portal-button {
             display: inline-block; padding: 15px 50px; font-size: 1.2rem;
+            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            font-weight: 700;
             color: #0A0A12; background: var(--neon-cyan); border: none;
-            text-decoration: none; font-weight: bold; letter-spacing: 2px; 
+            text-decoration: none; letter-spacing: 2px; 
             box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
             transition: all 0.3s ease;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
@@ -162,22 +174,21 @@
         .site-content { padding: 100px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
         .section { margin-bottom: 80px; }
         .neon-heading {
-            color: var(--neon-cyan); font-family: 'Orbitron', 'Noto Sans JP', sans-serif;
+            color: var(--neon-cyan); font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            font-weight: 900;
             font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px;
             text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
             border-left: 4px solid var(--neon-pink); padding-left: 15px;
         }
         .section p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; }
 
-        /* 卡片与展柜（切割朋克风） */
+        /* 卡片与展柜 */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card {
             background: var(--card-bg); padding: 25px;
             border: 1px solid rgba(0, 229, 255, 0.2); 
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            backdrop-filter: blur(5px);
-            /* 斜切边角 */
+            position: relative; backdrop-filter: blur(5px);
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
         .card::before {
@@ -185,13 +196,9 @@
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
             transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
         }
-        .card:hover { 
-            border-color: var(--neon-pink); 
-            box-shadow: 0 0 30px rgba(255, 61, 127, 0.2); 
-            transform: translateY(-5px); 
-        }
+        .card:hover { border-color: var(--neon-pink); box-shadow: 0 0 30px rgba(255, 61, 127, 0.2); transform: translateY(-5px); }
         .card:hover::before { transform: scaleX(1); }
-        .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; }
+        .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
         
         .product-image {
             background: rgba(0,0,0,0.5); height: 200px; 
@@ -207,14 +214,11 @@
         .insta-btn {
             display: block; text-align: center; margin-top: 15px; padding: 12px;
             background: transparent; color: var(--neon-pink); 
-            border: 1px solid var(--neon-pink);
-            text-decoration: none; font-weight: bold; transition: all 0.3s;
+            border: 1px solid var(--neon-pink); text-decoration: none; 
+            font-weight: bold; transition: all 0.3s;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
-        .insta-btn:hover {
-            background: var(--neon-pink); color: #FFF;
-            box-shadow: 0 0 20px rgba(255, 61, 127, 0.6);
-        }
+        .insta-btn:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 20px rgba(255, 61, 127, 0.6); }
     </style>
 </head>
 <body>
@@ -241,14 +245,12 @@
     <div class="portal-hero" id="portal-hero">
         <div class="portal-beam"></div>
         
-        <!-- 语言选择器 -->
         <div class="portal-lang-select" id="portal-lang-select">
             <a onclick="triggerPortal('ja')" class="lang-btn">日本語</a>
             <a onclick="triggerPortal('zh')" class="lang-btn">中文</a>
             <a onclick="triggerPortal('en')" class="lang-btn">English</a>
         </div>
 
-        <!-- 光门本体 -->
         <div class="portal-gate" id="portal-gate">
             <h1 class="portal-title" id="portal-title">日本アニメ・ゲーム協会</h1>
             <p class="portal-subtitle" id="portal-subtitle">アニメとゲームで、世界をつなぐ</p>
