@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日本アニメ・ゲーム協会 (JAGA)</title>
-    <!-- 核心修复：完整引入日文、中文的黑体，以及英文的 Orbitron -->
+    <!-- 字体引入 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
     <style>
         /* ================= 基础重置 & 赛博朋克配色 ================= */
         :root {
             --bg-color: #05050A;
-            --card-bg: rgba(15, 15, 25, 0.8);
+            --card-bg: rgba(15, 15, 25, 0.85);
             --neon-pink: #FF3D7F;
             --neon-cyan: #00E5FF;
             --text-main: #F0F0F5;
@@ -21,27 +21,21 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            /* 加上系统默认字体兜底，保证任何设备都不乱码 */
-            font-family: 'Noto Sans JP', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Noto Sans JP', 'Noto Sans SC', -apple-system, sans-serif;
             overflow-x: hidden;
-            /* 字体抗锯齿，消除毛边 */
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            /* 自定义霓虹星芒光标 */
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%23FF3D7F"/></svg>') 12 12, auto;
         }
         
-        a, button, .lang-btn, .card {
+        a, button, .lang-btn, .card, .tab-btn {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%2300E5FF"/><circle cx="12" cy="12" r="3" fill="%23FFF"/></svg>') 16 16, pointer !important;
         }
 
         /* --- 动态网格与扫描线背景 --- */
         .bg-grid {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
             background-size: 40px 40px; z-index: -2; perspective: 500px;
             animation: gridMove 10s linear infinite;
         }
@@ -55,28 +49,14 @@
         /* ================= 顶部导航栏 ================= */
         .site-header {
             position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(5, 5, 10, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 5, 10, 0.7); backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 61, 127, 0.3);
             z-index: 1000; padding: 15px 0;
         }
-        .header-inner {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .site-logo {
-            color: var(--neon-pink); font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem; font-weight: 900; text-decoration: none;
-            text-shadow: 0 0 10px rgba(255, 61, 127, 0.8);
-        }
-        .main-nav a, .lang-switch a {
-            color: var(--text-main); text-decoration: none; margin-left: 20px;
-            font-size: 0.9rem; transition: all 0.3s; position: relative;
-        }
-        .main-nav a::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
-            background: var(--neon-cyan); transition: width 0.3s; box-shadow: 0 0 8px var(--neon-cyan);
-        }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-logo { color: var(--neon-pink); font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900; text-decoration: none; text-shadow: 0 0 10px rgba(255, 61, 127, 0.8); }
+        .main-nav a, .lang-switch a { color: var(--text-main); text-decoration: none; margin-left: 20px; font-size: 0.9rem; transition: all 0.3s; position: relative; }
+        .main-nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-cyan); transition: width 0.3s; box-shadow: 0 0 8px var(--neon-cyan); }
         .main-nav a:hover::after { width: 100%; }
         .main-nav a:hover, .lang-switch a:hover { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
         .lang-switch a { color: var(--text-muted); }
@@ -84,145 +64,114 @@
 
         /* ================= 光门首屏区 ================= */
         .portal-hero {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: radial-gradient(circle at center, rgba(26,26,46,0.8) 0%, var(--bg-color) 100%);
             position: relative; overflow: hidden;
         }
-        .portal-lang-select {
-            display: flex; flex-direction: column; gap: 20px; z-index: 10;
-            transition: all 0.5s ease;
-        }
+        .portal-lang-select { display: flex; flex-direction: column; gap: 20px; z-index: 10; transition: all 0.5s ease; }
         .lang-btn {
-            font-size: 1.2rem; font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            font-size: 1.2rem; font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; font-weight: 700;
             color: var(--neon-cyan); text-decoration: none; text-align: center;
-            border: 2px solid rgba(0, 229, 255, 0.4); padding: 15px 60px; 
-            background: rgba(0, 0, 0, 0.6); transition: all 0.3s;
-            letter-spacing: 2px; font-weight: 700;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            border: 2px solid rgba(0, 229, 255, 0.4); padding: 15px 60px; background: rgba(0, 0, 0, 0.6); 
+            transition: all 0.3s; letter-spacing: 2px; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
-        .lang-btn:hover {
-            color: #fff; border-color: var(--neon-pink);
-            background: rgba(255, 61, 127, 0.2);
-            box-shadow: 0 0 25px rgba(255, 61, 127, 0.6); transform: scale(1.05);
-        }
+        .lang-btn:hover { color: #fff; border-color: var(--neon-pink); background: rgba(255, 61, 127, 0.2); box-shadow: 0 0 25px rgba(255, 61, 127, 0.6); transform: scale(1.05); }
 
-        /* 光门本体 */
-        .portal-gate {
-            display: none; text-align: center; z-index: 10;
-            opacity: 0; transform: scale(0.9);
-            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-        }
+        .portal-gate { display: none; text-align: center; z-index: 10; opacity: 0; transform: scale(0.9); transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); }
         .portal-gate.open { opacity: 1; transform: scale(1); }
-        
-        /* 故障风(Glitch)标题 - 修复了粗细不均的问题 */
         .portal-title {
-            font-size: 3rem; color: var(--neon-pink);
-            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
-            font-weight: 900; /* 强制最粗 */
-            letter-spacing: 4px;
-            /* 调整了错位和发光，让字更实、不那么糊 */
-            text-shadow: 
-                0 0 20px rgba(255, 61, 127, 0.9), 
-                1px 0 0 rgba(0, 229, 255, 0.8), 
-                -1px 0 0 rgba(255, 0, 0, 0.8);
-            margin-bottom: 1rem;
-            animation: glitch 3s infinite alternate;
+            font-size: 3rem; color: var(--neon-pink); font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; font-weight: 900;
+            letter-spacing: 4px; text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0, 229, 255, 0.8), -1px 0 0 rgba(255, 0, 0, 0.8);
+            margin-bottom: 1rem; animation: glitch 3s infinite alternate;
         }
         @keyframes glitch {
             0% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); }
             50% { text-shadow: 0 0 25px rgba(255, 61, 127, 1), -1px 0 0 rgba(0,229,255,0.8), 1px 0 0 rgba(255,0,0,0.8); }
             100% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); }
         }
-
-        .portal-subtitle {
-            font-size: 1.2rem; color: var(--neon-cyan);
-            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); margin-bottom: 2.5rem;
-        }
+        .portal-subtitle { font-size: 1.2rem; color: var(--neon-cyan); font-weight: 700; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); margin-bottom: 2.5rem; }
         .portal-button {
-            display: inline-block; padding: 15px 50px; font-size: 1.2rem;
-            font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
-            font-weight: 700;
-            color: #0A0A12; background: var(--neon-cyan); border: none;
-            text-decoration: none; letter-spacing: 2px; 
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
-            transition: all 0.3s ease;
+            display: inline-block; padding: 15px 50px; font-size: 1.2rem; font-weight: 700; color: #0A0A12; background: var(--neon-cyan);
+            text-decoration: none; letter-spacing: 2px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); transition: all 0.3s ease;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
-        .portal-button:hover {
-            background: var(--neon-pink); color: #FFF;
-            box-shadow: 0 0 30px rgba(255, 61, 127, 0.8); transform: translateY(-3px);
-        }
+        .portal-button:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 30px rgba(255, 61, 127, 0.8); transform: translateY(-3px); }
 
-        /* 光束爆炸特效 */
-        .portal-beam {
-            position: absolute; top: 50%; left: 50%;
-            width: 10px; height: 10px; background: #FFF; border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none;
-            box-shadow: 0 0 50px 20px var(--neon-pink), 0 0 100px 40px var(--neon-cyan);
-        }
+        .portal-beam { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; background: #FFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; box-shadow: 0 0 50px 20px var(--neon-pink), 0 0 100px 40px var(--neon-cyan); }
         .animating .portal-beam { animation: beamBurst 1s ease-out forwards; }
-        @keyframes beamBurst {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(5); opacity: 0.8; }
-            100% { transform: translate(-50%, -50%) scale(20); opacity: 0; }
-        }
+        @keyframes beamBurst { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(5); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(20); opacity: 0; } }
 
         /* ================= 主体内容区 ================= */
         .site-content { padding: 100px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
         .section { margin-bottom: 80px; }
         .neon-heading {
-            color: var(--neon-cyan); font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
-            font-weight: 900;
-            font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-            border-left: 4px solid var(--neon-pink); padding-left: 15px;
+            color: var(--neon-cyan); font-weight: 900; font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4); border-left: 4px solid var(--neon-pink); padding-left: 15px;
         }
-        .section p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; }
+        .section p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; white-space: pre-wrap; }
+
+        /* --- 数据背书与统计 --- */
+        .stats-bar {
+            display: flex; gap: 30px; margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 61, 127, 0.2); padding-bottom: 20px;
+        }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-num { color: var(--neon-pink); font-size: 2.2rem; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px rgba(255, 61, 127, 0.6); }
+        .stat-label { color: var(--neon-cyan); font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+
+        /* --- SHOWCASE Tabs 分类 --- */
+        .tab-container { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn {
+            background: transparent; border: 1px solid rgba(0, 229, 255, 0.4); color: var(--neon-cyan);
+            padding: 8px 20px; font-size: 0.9rem; font-weight: 700; transition: all 0.3s;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+        .tab-btn.active, .tab-btn:hover { background: rgba(255, 61, 127, 0.2); border-color: var(--neon-pink); color: #FFF; box-shadow: 0 0 15px rgba(255, 61, 127, 0.4); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 卡片与展柜 */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card {
-            background: var(--card-bg); padding: 25px;
-            border: 1px solid rgba(0, 229, 255, 0.2); 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; backdrop-filter: blur(5px);
+            background: var(--card-bg); padding: 25px; border: 1px solid rgba(0, 229, 255, 0.2); 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; backdrop-filter: blur(5px);
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
-            transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-        }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
         .card:hover { border-color: var(--neon-pink); box-shadow: 0 0 30px rgba(255, 61, 127, 0.2); transform: translateY(-5px); }
         .card:hover::before { transform: scaleX(1); }
-        .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
+        .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; margin-top: 10px; }
         
         .product-image {
-            background: rgba(0,0,0,0.5); height: 200px; 
-            display: flex; align-items: center; justify-content: center;
-            color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px;
-            border: 1px dashed rgba(0, 229, 255, 0.3);
+            background: rgba(0,0,0,0.5); height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px; border: 1px dashed rgba(0, 229, 255, 0.3);
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+            position: relative; overflow: hidden;
         }
-        .badge { 
-            background: rgba(255, 61, 127, 0.2); color: var(--neon-pink); 
-            padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--neon-pink); 
+        .product-image::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg); transition: 0.5s;
         }
+        .card:hover .product-image::after { left: 100%; } /* 扫光特效 */
+
+        .badge { background: rgba(255, 61, 127, 0.2); color: var(--neon-pink); padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--neon-pink); display: inline-block; font-weight: bold; }
+        .badge-cyan { background: rgba(0, 229, 255, 0.2); color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        
+        .card-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+        
         .insta-btn {
             display: block; text-align: center; margin-top: 15px; padding: 12px;
-            background: transparent; color: var(--neon-pink); 
-            border: 1px solid var(--neon-pink); text-decoration: none; 
-            font-weight: bold; transition: all 0.3s;
+            background: transparent; color: var(--neon-pink); border: 1px solid var(--neon-pink);
+            text-decoration: none; font-weight: bold; transition: all 0.3s;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
         .insta-btn:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 20px rgba(255, 61, 127, 0.6); }
     </style>
 </head>
 <body>
-    <!-- 赛博朋克背景层 -->
     <div class="bg-grid"></div>
     <div class="bg-scanlines"></div>
 
@@ -244,13 +193,11 @@
 
     <div class="portal-hero" id="portal-hero">
         <div class="portal-beam"></div>
-        
         <div class="portal-lang-select" id="portal-lang-select">
             <a onclick="triggerPortal('ja')" class="lang-btn">日本語</a>
             <a onclick="triggerPortal('zh')" class="lang-btn">中文</a>
             <a onclick="triggerPortal('en')" class="lang-btn">English</a>
         </div>
-
         <div class="portal-gate" id="portal-gate">
             <h1 class="portal-title" id="portal-title">日本アニメ・ゲーム協会</h1>
             <p class="portal-subtitle" id="portal-subtitle">アニメとゲームで、世界をつなぐ</p>
@@ -259,33 +206,98 @@
     </div>
 
     <main id="main" class="site-content">
+        <!-- 协会概要 -->
         <section id="about" class="section">
             <h2 class="neon-heading" data-i18n="head_about">ABOUT JAGA</h2>
-            <p data-i18n="desc_about">日本动漫游戏协会成立于2012年，协会成员包括：
-日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。
-协会致力于整合协会成员公司或个人平台内部资源，优势互补；
-对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。
-目前累计50家成员企业，及数十名个人创作者、作家及艺术家。</p>
+            <p data-i18n="desc_about"></p>
         </section>
 
+        <!-- 业务内容 -->
         <section id="services" class="section">
             <h2 class="neon-heading" data-i18n="head_services">SERVICES</h2>
             <div class="grid-3">
-                <div class="card"><h3 data-i18n="srv_1_t">コンテンツ輸出</h3><p data-i18n="srv_1_d">海外展開のサポート、ローカライズ、プロモーション企画。</p></div>
-                <div class="card"><h3 data-i18n="srv_2_t">ライセンス管理</h3><p data-i18n="srv_2_d">海外市場における日本IPの版権案件依頼・企画管理。</p></div>
-                <div class="card"><h3 data-i18n="srv_3_t">ローカライズ</h3><p data-i18n="srv_3_d">現地企業との提携、市場テスト、収益回収。</p></div>
+                <div class="card"><h3 data-i18n="srv_1_t">コンテンツ輸出</h3><p data-i18n="srv_1_d"></p></div>
+                <div class="card"><h3 data-i18n="srv_2_t">ライセンス管理</h3><p data-i18n="srv_2_d"></p></div>
+                <div class="card"><h3 data-i18n="srv_3_t">ローカライズ</h3><p data-i18n="srv_3_d"></p></div>
             </div>
         </section>
 
+        <!-- 升级版 SHOWCASE -->
         <section id="shop" class="section">
             <h2 class="neon-heading" data-i18n="head_shop">SHOWCASE</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <div class="product-image" data-i18n="shop_img">[ フィギュア画像 ]</div>
-                    <span class="badge" data-i18n="shop_badge">販売終了</span>
-                    <h3 style="margin-top:10px;" data-i18n="shop_title">一騎当千 関羽 1/４ スケールフィギュア</h3>
-                    <p style="font-size:0.9rem; margin-bottom: 0;" data-i18n="shop_desc">JAGA会員企業実例</p>
-                    <a href="https://www.instagram.com/" target="_blank" class="insta-btn" data-i18n="shop_btn">Instagramで詳細確認</a>
+            
+            <!-- 数据背书 -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-num">50+</span>
+                    <span class="stat-label" data-i18n="stat_1">Member Enterprises</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">120+</span>
+                    <span class="stat-label" data-i18n="stat_2">Licensed Projects</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">10+</span>
+                    <span class="stat-label" data-i18n="stat_3">Countries Covered</span>
+                </div>
+            </div>
+
+            <!-- Tab 分类按钮 -->
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('game')" data-i18n="tab_game">🎮 游戏授权</button>
+                <button class="tab-btn" onclick="switchTab('culture')" data-i18n="tab_culture">🏮 文化交流</button>
+                <button class="tab-btn" onclick="switchTab('merch')" data-i18n="tab_merch">🧸 实体周边</button>
+            </div>
+
+            <!-- 游戏授权 -->
+            <div id="tab-game" class="tab-content active">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="product-image"><span>[ Game Visual ]</span></div>
+                        <span class="badge" data-i18n="auth_license">官方授权</span>
+                        <h3 data-i18n="game_1_t"></h3>
+                        <div class="card-meta">
+                            <div data-i18n="game_1_m1"></div>
+                            <div data-i18n="game_1_m2"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="product-image"><span>[ Game Visual ]</span></div>
+                        <span class="badge badge-cyan" data-i18n="auth_partner">合作项目</span>
+                        <h3 data-i18n="game_2_t"></h3>
+                        <div class="card-meta">
+                            <div data-i18n="game_2_m1"></div>
+                            <div data-i18n="game_2_m2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文化交流 -->
+            <div id="tab-culture" class="tab-content">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="product-image" style="color: #FF3D7F;"><span>[ Event Photo ]</span></div>
+                        <span class="badge" data-i18n="auth_event">官方活动</span>
+                        <h3 data-i18n="culture_1_t"></h3>
+                        <div class="card-meta">
+                            <div data-i18n="culture_1_m1"></div>
+                            <div data-i18n="culture_1_m2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实体周边 -->
+            <div id="tab-merch" class="tab-content">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="product-image"><span>[ Figure Photo ]</span></div>
+                        <span class="badge" data-i18n="auth_soldout">已售罄</span>
+                        <h3 data-i18n="merch_1_t"></h3>
+                        <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 0;" data-i18n="merch_1_d"></p>
+                        <a href="https://www.instagram.com/" target="_blank" class="insta-btn" data-i18n="merch_btn">Instagramで詳細確認</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -296,37 +308,68 @@
             ja: {
                 nav_about: "協会概要", nav_services: "業務内容", nav_shop: "ショーケース",
                 portal_title: "日本アニメ・ゲーム協会", portal_sub: "アニメとゲームで、世界をつなぐ", portal_btn: "サイトへ入る",
-                head_about: "協会概要 (ABOUT)", desc_about: "日本アニメ・ゲーム協会は2012年に設立されました。協会の会員は以下を含みます：
-日本国内および海外のゲーム制作・発行・運営企業、アニメ制作会社、メディア制作会社、広告会社、個人画家、アニメクリエイターなどの創作力を持つ者。
-協会は会員企業または個人のプラットフォーム内のリソースを統合し、強みを相互補完することに取り組んでいます。
-対外的に業務ルートを一元化し、複数の仲介手続きによるコンテンツ・リソースの複雑化を回避し、会員企業や個人のリソース共有の有効性を高めます。
-現在、累計50社の会員企業、数十名の個人クリエイター、作家、芸術家が在籍しています。",
-                head_services: "業務内容 (SERVICES)", srv_1_t: "コンテンツ輸出", srv_1_d: "海外展開のサポート、ローカライズ、プロモーション企画。", srv_2_t: "版権管理", srv_2_d: "海外市場における日本IPライセンシー依頼・企画管理。", srv_3_t: "ローカライズ", srv_3_d: "現地企業との提携、市場テスト、収益回収。",
-                head_shop: "正品展櫃 (SHOWCASE)", shop_img: "[ 手办实物图 ]", shop_badge: "限定生産", shop_title: "一騎当千 関羽 1/４スケールフィギュア", shop_desc: "JAGA会員様実績", shop_btn: "Instagramで詳細確認"
+                head_about: "協会概要 (ABOUT)", 
+                desc_about: "日本アニメ・ゲーム協会は2012年に設立されました。協会の会員は以下を含みます：\n日本国内および海外のゲーム制作・発行・運営企業、アニメ制作会社、メディア制作会社、広告会社、個人画家、アニメクリエイターなどの創作力を持つ者。\n協会は会員企業または個人のプラットフォーム内のリソースを統合し、強みを相互補完することに取り組んでいます。\n対外的に業務ルートを一元化し、複数の仲介手続きによるコンテンツ・リソースの複雑化を回避し、会員企業や個人のリソース共有の有効性を高めます。\n現在、累計50社の会員企業、数十名の個人クリエイター、作家、芸術家が在籍しています。",
+                head_services: "業務内容 (SERVICES)", 
+                srv_1_t: "コンテンツ輸出", srv_1_d: "海外展開のサポート、ローカライズ、プロモーション企画。", 
+                srv_2_t: "版権管理", srv_2_d: "海外市場における日本IPライセンシー依頼・企画管理。", 
+                srv_3_t: "ローカライズ", srv_3_d: "現地企業との提携、市場テスト、収益回収。",
+                
+                head_shop: "実績ショーケース (SHOWCASE)", 
+                stat_1: "加盟企業", stat_2: "授権プロジェクト", stat_3: "展開国・地域",
+                tab_game: "🎮 ゲームライセンス", tab_culture: "🏮 文化交流", tab_merch: "🧸 グッズ・フィギュア",
+                auth_license: "公式ライセンス", auth_partner: "提携プロジェクト", auth_event: "公式イベント", auth_soldout: "完売御礼",
+                
+                game_1_t: "Nintendo Switch 冒険RPG", game_1_m1: "協力：〇〇ゲームス", game_1_m2: "授権地域：中国・東南アジア",
+                game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：〇〇スタジオ", game_2_m2: "展開：2023年より全世界",
+                
+                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 〇〇市", culture_1_m2: "来場者数：500名以上",
+                
+                merch_1_t: "一騎当千 関羽 1/4スケールフィギュア", merch_1_d: "JAGA会員企業による製造・販売実績", merch_btn: "Instagramで詳細確認"
             },
             zh: {
-                nav_about: "协会概要", nav_services: "业务内容", nav_shop: "ショーケース",
+                nav_about: "协会概要", nav_services: "业务内容", nav_shop: "实力展柜",
                 portal_title: "日本动漫游戏协会", portal_sub: "用动漫与游戏连接世界", portal_btn: "点击进入",
-                head_about: "协会概要 (ABOUT)", desc_about: "日本动漫游戏协会成立于2012年，协会成员包括：
-日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。
-协会致力于整合协会成员公司或个人平台内部资源，优势互补；
-对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。
-目前累计50家成员企业，及数十名个人创作者、作家及艺术家。",
-                head_services: "业务内容 (SERVICES)", srv_1_t: "内容输出", srv_1_d: "海外拓展支持、本地化、宣传企划。", srv_2_t: "版权管理", srv_2_d: "海外市场日本IP的版权管理与监修。", srv_3_t: "本地化平台", srv_3_d: "与当地企业对接、市场测试、收益回收。",
-                head_shop: "SHOWCASE", shop_img: "[ 手办实物图 ]", shop_badge: "销售结束", shop_title: "一骑当千 关羽 1/4 手办", shop_desc: "JAGA会员企业实绩", shop_btn: "前往 Instagram 确认"
+                head_about: "协会概要 (ABOUT)", 
+                desc_about: "日本动漫游戏协会成立于2012年，协会成员包括：\n日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。\n协会致力于整合协会成员公司或个人平台内部资源，优势互补；\n对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。\n目前累计50家成员企业，及数十名个人创作者、作家及艺术家。",
+                head_services: "业务内容 (SERVICES)", 
+                srv_1_t: "内容输出", srv_1_d: "海外拓展支持、本地化、宣传企划。", 
+                srv_2_t: "版权管理", srv_2_d: "海外市场日本IP的版权案件委托与企划管理。", 
+                srv_3_t: "本地化平台", srv_3_d: "与当地企业对接、市场测试、收益回收。",
+                
+                head_shop: "实力展示 (SHOWCASE)", 
+                stat_1: "成员企业", stat_2: "授权项目", stat_3: "覆盖国家地区",
+                tab_game: "🎮 游戏授权", tab_culture: "🏮 文化交流", tab_merch: "🧸 实体周边",
+                auth_license: "官方授权", auth_partner: "合作项目", auth_event: "官方活动", auth_soldout: "已售罄",
+                
+                game_1_t: "Nintendo Switch 冒险RPG", game_1_m1: "合作方：〇〇游戏", game_1_m2: "授权区域：中国大陆/东南亚",
+                game_2_t: "智能手机对战游戏", game_2_m1: "开发：〇〇工作室", game_2_m2: "发行：2023年起全球上线",
+                
+                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 〇〇市", culture_1_m2: "参会人数：500人以上",
+                
+                merch_1_t: "一骑当千 关羽 1/4 手办", merch_1_d: "JAGA会员企业制造与销售实绩", merch_btn: "前往 Instagram 确认"
             },
             en: {
                 nav_about: "About", nav_services: "Services", nav_shop: "Showcase",
                 portal_title: "Japan Animations Games Association", portal_sub: "Connecting the world through Anime and Games", portal_btn: "ENTER",
-                head_about: "ABOUT JAGA", desc_about: "The Japan Anime & Game Association was founded in 2012. Its members include:
-Game development, publishing and operating companies in Japan and overseas; anime production companies; media production companies; advertising agencies; individual illustrators; anime creators and other talented creators.
-
-The association is committed to integrating internal resources from its member companies and individual platforms to achieve complementary advantages;
-It unifies external business channels, avoids the complication of resources and content caused by multi-layer intermediate operations, and improves the effectiveness of resource sharing among member enterprises and individuals.
-
-At present, it has a total of 50 member enterprises, as well as dozens of individual creators, writers and artists.",
-                head_services: "SERVICES", srv_1_t: "Content Export", srv_1_d: "Overseas expansion support, localization, and promotion planning.", srv_2_t: "Licensing", srv_2_d: "Copyright management and supervision for Japanese IP in overseas markets.", srv_3_t: "Localization", srv_3_d: "Local enterprise matching, market testing, and revenue collection.",
-                head_shop: "SHOWCASE", shop_img: "[ Figure Image ]", shop_badge: "Limited Edition", shop_title: "Kanwu Itsukitousen 1/7 Scale Figure", shop_desc: "Supervised by JAGA's member", shop_btn: "Check on Instagram"
+                head_about: "ABOUT JAGA", 
+                desc_about: "The Japan Anime & Game Association was founded in 2012. Its members include:\nGame development, publishing and operating companies in Japan and overseas; anime production companies; media production companies; advertising agencies; individual illustrators; anime creators and other talented creators.\nThe association is committed to integrating internal resources from its member companies and individual platforms to achieve complementary advantages;\nIt unifies external business channels, avoids the complication of resources and content caused by multi-layer intermediate operations, and improves the effectiveness of resource sharing among member enterprises and individuals.\nAt present, it has a total of 50 member enterprises, as well as dozens of individual creators, writers and artists.",
+                head_services: "SERVICES", 
+                srv_1_t: "Content Export", srv_1_d: "Overseas expansion support, localization, and promotion planning.", 
+                srv_2_t: "Licensing", srv_2_d: "Copyright management and supervision for Japanese IP in overseas markets.", 
+                srv_3_t: "Localization", srv_3_d: "Local enterprise matching, market testing, and revenue collection.",
+                
+                head_shop: "SHOWCASE", 
+                stat_1: "Members", stat_2: "Projects", stat_3: "Countries",
+                tab_game: "🎮 Game Licensing", tab_culture: "🏮 Culture Exchange", tab_merch: "🧸 Merchandise",
+                auth_license: "Official License", auth_partner: "Partner Project", auth_event: "Official Event", auth_soldout: "SOLD OUT",
+                
+                game_1_t: "Nintendo Switch Adventure RPG", game_1_m1: "Partner: 〇〇 Games", game_1_m2: "Region: Mainland China / SEA",
+                game_2_t: "Mobile Battle Game", game_2_m1: "Dev: 〇〇 Studio", game_2_m2: "Launch: Global from 2023",
+                
+                culture_1_t: "2023 China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / 〇〇 City", culture_1_m2: "Attendees: 500+",
+                
+                merch_1_t: "Kanwu Itsukitousen 1/4 Scale Figure", merch_1_d: "Manufactured and sold by JAGA member", merch_btn: "Check on Instagram"
             }
         };
 
@@ -353,13 +396,11 @@ At present, it has a total of 50 member enterprises, as well as dozens of indivi
 
         function triggerPortal(lang) {
             switchLanguage(lang);
-
             const hero = document.getElementById('portal-hero');
             const select = document.getElementById('portal-lang-select');
             const gate = document.getElementById('portal-gate');
 
             hero.classList.add('animating');
-            
             select.style.opacity = '0';
             select.style.transform = 'scale(0.8)';
             
@@ -372,15 +413,27 @@ At present, it has a total of 50 member enterprises, as well as dozens of indivi
                 document.getElementById('portal-subtitle').innerText = dict.portal_sub;
                 document.querySelector('.portal-button').innerText = dict.portal_btn;
 
-                setTimeout(() => {
-                    gate.classList.add('open');
-                }, 50);
+                setTimeout(() => { gate.classList.add('open'); }, 50);
             }, 600);
         }
 
         function scrollToMain() {
             document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Tab 切换逻辑
+        function switchTab(tabId) {
+            // 按钮状态
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            // 内容状态
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // 初始化加载日文
+        window.onload = () => { switchLanguage('ja'); };
     </script>
 </body>
 </html>
