@@ -53,8 +53,42 @@
         .lang-switch a.active { color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
 
         /* ================= 光门首屏区 ================= */
-        .portal-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at center, rgba(26,26,46,0.8) 0%, var(--bg-color) 100%); position: relative; overflow: hidden; }
-        .portal-lang-select { display: flex; flex-direction: column; gap: 20px; z-index: 10; transition: all 0.5s ease; }
+                /* ================= 光门首屏区 ================= */
+        .portal-hero { 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative; 
+            overflow: hidden; 
+            background: var(--bg-color); /* 兜底背景 */
+        }
+
+        /* 视频绝对定位铺满 */
+        .bg-video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            object-fit: cover;
+        }
+
+        /* 增加一个暗色遮罩，保证按钮和文字清晰可见 */
+        .portal-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 10, 0.6); /* 这里的0.6是透明度，如果视频太亮可以改成0.7或0.8 */
+            z-index: 1;
+        }
+
+        /* 确保所有交互元素和文字都在遮罩之上 */
+        .portal-lang-select, .portal-gate, .portal-beam { 
+            z-index: 10; 
+        }
         .lang-btn { font-size: 1.2rem; font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; font-weight: 700; color: var(--neon-cyan); text-decoration: none; text-align: center; border: 2px solid rgba(0, 229, 255, 0.4); padding: 15px 60px; background: rgba(0, 0, 0, 0.6); transition: all 0.3s; letter-spacing: 2px; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .lang-btn:hover { color: #fff; border-color: var(--neon-pink); background: rgba(255, 61, 127, 0.2); box-shadow: 0 0 25px rgba(255, 61, 127, 0.6); transform: scale(1.05); }
 
@@ -201,6 +235,14 @@
     </header>
 
     <div class="portal-hero" id="portal-hero">
+            <div class="portal-hero" id="portal-hero">
+        <!-- 插入的视频背景 -->
+        <video autoplay loop muted playsinline class="bg-video">
+            <source src="bg-video.mp4" type="video/mp4">
+        </video>
+
+        <div class="portal-beam"></div>
+        <!-- 下面原有的代码保持不变 -->
         <div class="portal-beam"></div>
         <div class="portal-lang-select" id="portal-lang-select">
             <a onclick="triggerPortal('ja')" class="lang-btn">日本語</a>
