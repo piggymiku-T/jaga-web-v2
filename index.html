@@ -152,10 +152,12 @@
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); 
             position: relative; overflow: hidden; 
         }
+        
         /* 图片和视频都铺满自适应 */
         .product-image img, .product-image video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 1; transition: transform 0.5s ease;
+            object-fit: cover; object-position: center; /* 确保裁剪时居中 */
+            z-index: 1; transition: transform 0.5s ease;
         }
         .card:hover .product-image img, .card:hover .product-image video { transform: scale(1.08); }
         
@@ -393,27 +395,36 @@
                 </div>
             </div>
 
-            <!-- 文化交流 Tab -->
+            <!-- 文化交流 Tab (分为两个卡片) -->
             <div id="tab-culture" class="tab-content">
                 <div class="grid-3">
+                    <!-- 案例1：2018年 -->
                     <div class="card">
                         <div class="product-image">
-                            <img src="event1.jpg" alt="文化交流论坛">
+                            <img src="event_2018.jpg" alt="2018 文化交流">
                         </div>
                         <span class="badge" data-i18n="auth_event"></span>
                         <h3 data-i18n="culture_1_t"></h3>
                         <div class="card-meta"><div data-i18n="culture_1_m1"></div><div data-i18n="culture_1_m2"></div></div>
                     </div>
+                    <!-- 案例2：2020年 -->
+                    <div class="card">
+                        <div class="product-image">
+                            <img src="event_2020.jpg" alt="2020 企业访问">
+                        </div>
+                        <span class="badge badge-cyan" data-i18n="auth_event"></span>
+                        <h3 data-i18n="culture_2_t"></h3>
+                        <div class="card-meta"><div data-i18n="culture_2_m1"></div><div data-i18n="culture_2_m2"></div></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 实体周边 Tab (更新了两个SKU) -->
+            <!-- 实体周边 Tab (两个SKU) -->
             <div id="tab-merch" class="tab-content">
                 <div class="grid-3">
                     <!-- SKU 1: 视频 -->
                     <div class="card">
                         <div class="product-image">
-                            <!-- 请将 src 替换为你上传的视频文件名，例如 figure-video.mp4 -->
                             <video autoplay loop muted playsinline src="figure-video.mp4" alt="Ikkitousen Video"></video>
                         </div>
                         <span class="badge" data-i18n="auth_soldout"></span>
@@ -425,7 +436,6 @@
                     <!-- SKU 2: 图片 -->
                     <div class="card">
                         <div class="product-image">
-                            <!-- 请将 src 替换为你上传的图片文件名，例如 figure-image.jpg -->
                             <img src="figure-image.jpg" alt="Ikkitousen Figure">
                         </div>
                         <span class="badge" data-i18n="auth_license"></span>
@@ -486,7 +496,11 @@
                 auth_license: "公式ライセンス", auth_partner: "提携プロジェクト", auth_event: "公式イベント", auth_soldout: "完売御礼",
                 game_1_t: "SALVO GAMES", game_1_m1: "協力：SALVO GAMES", game_1_m2: "授権地域：中国・東南アジア",
                 game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：Gainslink", game_2_m2: "展開：2023年より全世界",
-                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
+                
+                /* 新增：文化交流两连发 */
+                culture_1_t: "2018年 中日文化交流会", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
+                culture_2_t: "2020年 企業訪問交流会", culture_2_m1: "主催：JAGA / 東京", culture_2_m2: "参加企業：20社以上",
+
                 merch_video_t: "一騎当千 関羽 1/4スケールフィギュア (映像)", merch_video_d: "JAGA会員企業による製造・販売実績",
                 merch_img_t: "一騎当千 関羽 1/4スケールフィギュア (画像)", merch_img_d: "JAGA会員企業による製造・販売実績",
                 merch_btn: "Instagramで詳細確認",
@@ -515,7 +529,10 @@
                 auth_license: "官方授权", auth_partner: "合作项目", auth_event: "官方活动", auth_soldout: "已售罄",
                 game_1_t: "SALVO GAMES", game_1_m1: "合作方：SALVO GAMES", game_1_m2: "授权区域：中国大陆/东南亚",
                 game_2_t: "智能手机对战游戏", game_2_m1: "开发：Gainslink", game_2_m2: "发行：2023年起全球上线",
-                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
+                
+                culture_1_t: "2018年 中日文化交流会", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
+                culture_2_t: "2020年 企业访问交流会", culture_2_m1: "主办：JAGA / 东京", culture_2_m2: "参与企业：20家以上",
+
                 merch_video_t: "一骑当千 关羽 1/4 手办 (视频版)", merch_video_d: "JAGA会员企业制造与销售实绩",
                 merch_img_t: "一骑当千 关羽 1/4 手办 (图片版)", merch_img_d: "JAGA会员企业制造与销售实绩",
                 merch_btn: "前往 Instagram 确认",
@@ -545,7 +562,10 @@
                 auth_license: "Official License", auth_partner: "Partner Project", auth_event: "Official Event", auth_soldout: "SOLD OUT",
                 game_1_t: "SALVO GAMES", game_1_m1: "Partner: SALVO Games", game_1_m2: "Authorized Region: Chinese Mainland / Southeast Asia",
                 game_2_t: "Mobile Battle Game", game_2_m1: "Dev: Gainslink", game_2_m2: "Launch: Global from 2023",
-                culture_1_t: "2023 China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
+                
+                culture_1_t: "2018 China-Japan Cultural Exchange", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
+                culture_2_t: "2020 Enterprise Exchange Meeting", culture_2_m1: "Host: JAGA / Tokyo", culture_2_m2: "Participating Companies: 20+",
+
                 merch_video_t: "Ikkitousen Kanu 1/4 Scale Figure (Video)", merch_video_d: "Manufactured and sold by JAGA member",
                 merch_img_t: "Ikkitousen Kanu 1/4 Scale Figure (Image)", merch_img_d: "Manufactured and sold by JAGA member",
                 merch_btn: "Check on Instagram",
