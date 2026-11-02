@@ -11,7 +11,7 @@
             --bg-color: #05050A;
             --card-bg: rgba(15, 15, 25, 0.85);
             --neon-pink: #FF3D7F;
-            --neon-cyan: #00E5FF;
+            --neon-cyan: #39C5BB; 
             --text-main: #F0F0F5;
             --text-muted: #8A8A9F;
         }
@@ -20,9 +20,12 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Noto Sans JP', 'Noto Sans SC', -apple-system, sans-serif;
+            /* 核心修复：优先使用系统原生中文字体，保证粗细绝对均匀 */
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, "Noto Sans SC", "Noto Sans JP", sans-serif;
             overflow-x: hidden;
+            /* 开启字体抗锯齿，消除毛边 */
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%23FF3D7F"/></svg>') 12 12, auto;
             display: flex;
@@ -30,12 +33,12 @@
             min-height: 100vh;
         }
         
-        a, button, .lang-btn, .card, .tab-btn, .legal-link {
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%2300E5FF"/><circle cx="12" cy="12" r="3" fill="%23FFF"/></svg>') 16 16, pointer !important;
+        a, button, .lang-btn, .card, .tab-btn, .legal-link, .fork-btn {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" fill="%2339C5BB"/><circle cx="12" cy="12" r="3" fill="%23FFF"/></svg>') 16 16, pointer !important;
         }
 
         /* --- 动态网格与扫描线背景 --- */
-        .bg-grid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: -2; perspective: 500px; animation: gridMove 10s linear infinite; }
+        .bg-grid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(rgba(57, 197, 187, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(57, 197, 187, 0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: -2; perspective: 500px; animation: gridMove 10s linear infinite; }
         .bg-scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px); pointer-events: none; z-index: 9999; }
         @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
 
@@ -52,92 +55,135 @@
         .lang-switch a { color: var(--text-muted); }
         .lang-switch a.active { color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
 
-        /* ================= 光门首屏区（包含视频背景） ================= */
-        .portal-hero { 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            position: relative; 
-            overflow: hidden; 
-            background: var(--bg-color); /* 兜底背景 */
-        }
-
-        /* 视频绝对定位铺满 */
-        .bg-video {
-            position: absolute;
-            top: 50%; left: 50%;
-            min-width: 100%; min-height: 100%;
-            width: auto; height: auto;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            object-fit: cover;
-        }
-
-        /* 增加暗色遮罩，保证按钮和文字清晰可见 */
-        .portal-hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 10, 0.65); /* 这里的0.65是透明度，视频太亮可改0.7或0.8 */
-            z-index: 1;
-        }
-
-        /* 确保所有交互元素和文字都在遮罩之上 */
-        .portal-lang-select, .portal-gate, .portal-beam { 
-            z-index: 10; 
-        }
+        /* ================= 光门首屏区 ================= */
+        .portal-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; background: var(--bg-color); }
+        .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 0; object-fit: cover; }
+        .portal-hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 10, 0.65); z-index: 1; }
+        .portal-lang-select, .portal-gate, .portal-beam { z-index: 10; }
 
         .portal-lang-select { display: flex; flex-direction: column; gap: 20px; transition: all 0.5s ease; }
-        .lang-btn { font-size: 1.2rem; font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; font-weight: 700; color: var(--neon-cyan); text-decoration: none; text-align: center; border: 2px solid rgba(0, 229, 255, 0.4); padding: 15px 60px; background: rgba(0, 0, 0, 0.6); transition: all 0.3s; letter-spacing: 2px; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+        .lang-btn { font-size: 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; color: var(--neon-cyan); text-decoration: none; text-align: center; border: 2px solid rgba(57, 197, 187, 0.4); padding: 15px 60px; background: rgba(0, 0, 0, 0.6); transition: all 0.3s; letter-spacing: 2px; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .lang-btn:hover { color: #fff; border-color: var(--neon-pink); background: rgba(255, 61, 127, 0.2); box-shadow: 0 0 25px rgba(255, 61, 127, 0.6); transform: scale(1.05); }
 
         .portal-gate { display: none; text-align: center; opacity: 0; transform: scale(0.9); transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); }
         .portal-gate.open { opacity: 1; transform: scale(1); }
-        .portal-title { font-size: 3rem; color: var(--neon-pink); font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0, 229, 255, 0.8), -1px 0 0 rgba(255, 0, 0, 0.8); margin-bottom: 1rem; animation: glitch 3s infinite alternate; }
-        @keyframes glitch { 0% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); } 50% { text-shadow: 0 0 25px rgba(255, 61, 127, 1), -1px 0 0 rgba(0,229,255,0.8), 1px 0 0 rgba(255,0,0,0.8); } 100% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(0,229,255,0.8), -1px 0 0 rgba(255,0,0,0.8); } }
-        .portal-subtitle { font-size: 1.2rem; color: var(--neon-cyan); font-weight: 700; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); margin-bottom: 2.5rem; }
-        .portal-button { display: inline-block; padding: 15px 50px; font-size: 1.2rem; font-weight: 700; color: #0A0A12; background: var(--neon-cyan); text-decoration: none; letter-spacing: 2px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); transition: all 0.3s ease; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+        .portal-title { font-size: 3rem; color: var(--neon-pink); font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(57, 197, 187, 0.8), -1px 0 0 rgba(255, 0, 0, 0.8); margin-bottom: 1rem; animation: glitch 3s infinite alternate; }
+        @keyframes glitch { 0% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(57,197,187,0.8), -1px 0 0 rgba(255,0,0,0.8); } 50% { text-shadow: 0 0 25px rgba(255, 61, 127, 1), -1px 0 0 rgba(57,197,187,0.8), 1px 0 0 rgba(255,0,0,0.8); } 100% { text-shadow: 0 0 20px rgba(255, 61, 127, 0.9), 1px 0 0 rgba(57,197,187,0.8), -1px 0 0 rgba(255,0,0,0.8); } }
+        .portal-subtitle { font-size: 1.2rem; color: var(--neon-cyan); font-weight: 700; text-shadow: 0 0 10px rgba(57, 197, 187, 0.5); margin-bottom: 2.5rem; }
+        .portal-button { display: inline-block; padding: 15px 50px; font-size: 1.2rem; font-weight: 700; color: #0A0A12; background: var(--neon-cyan); text-decoration: none; letter-spacing: 2px; box-shadow: 0 0 15px rgba(57, 197, 187, 0.6); transition: all 0.3s ease; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .portal-button:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 30px rgba(255, 61, 127, 0.8); transform: translateY(-3px); }
         .portal-beam { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; background: #FFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; box-shadow: 0 0 50px 20px var(--neon-pink), 0 0 100px 40px var(--neon-cyan); }
         .animating .portal-beam { animation: beamBurst 1s ease-out forwards; }
         @keyframes beamBurst { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(5); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(20); opacity: 0; } }
 
+        /* ================= 核心新增：向导系统 (Guide Overlay) ================= */
+        .guide-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 5, 10, 0.85); backdrop-filter: blur(8px);
+            z-index: 1500; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        .guide-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .guide-box {
+            background: rgba(10, 15, 20, 0.95);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(57, 197, 187, 0.3), inset 0 0 20px rgba(57, 197, 187, 0.1);
+            width: 90%; max-width: 600px; padding: 40px 30px; position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        
+        /* 向导 JAGI 形象 */
+        .guide-avatar {
+            width: 60px; height: 60px; background: var(--neon-cyan);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            margin-bottom: 20px; animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 20px var(--neon-cyan);
+            position: relative;
+        }
+        .guide-avatar::after {
+            content: ''; position: absolute; top: 15px; left: 15px; width: 30px; height: 10px;
+            background: #000; border-radius: 2px;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .guide-text {
+            color: var(--neon-cyan); font-size: 1.1rem; line-height: 1.8;
+            font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif; 
+            min-height: 80px; text-align: left; width: 100%; margin-bottom: 20px;
+        }
+        .guide-text::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .guide-btn {
+            background: transparent; border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan); padding: 10px 30px; font-size: 1rem; font-weight: bold;
+            transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            opacity: 0; pointer-events: none;
+        }
+        .guide-btn.show { opacity: 1; pointer-events: auto; }
+        .guide-btn:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
+
         /* ================= 主体内容区 ================= */
         .site-content { padding: 100px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; flex: 1; width: 100%; }
         .section { margin-bottom: 80px; }
-        .neon-heading { color: var(--neon-cyan); font-weight: 900; font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 0 15px rgba(0, 229, 255, 0.4); border-left: 4px solid var(--neon-pink); padding-left: 15px; }
+        .neon-heading { color: var(--neon-cyan); font-weight: 900; font-size: 2rem; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 0 15px rgba(57, 197, 187, 0.4); border-left: 4px solid var(--neon-pink); padding-left: 15px; }
         .section p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; white-space: pre-wrap; }
 
-        /* --- 加盟企业 Logo 墙 --- */
-        .logo-marquee {
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            padding: 20px 0;
-            border-top: 1px dashed rgba(0, 229, 255, 0.2);
-            border-bottom: 1px dashed rgba(0, 229, 255, 0.2);
-            margin-top: 30px;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        /* --- 进阶：时间线 (Timeline) 样式 --- */
+        .timeline-section { position: relative; padding: 40px 0; overflow: hidden; }
+        .timeline-track {
+            position: absolute; top: 0; left: 20px; width: 4px; height: 100%;
+            background: rgba(57, 197, 187, 0.1);
         }
-        .logo-track {
-            display: inline-block;
-            animation: scrollLogos 25s linear infinite;
+        .timeline-progress {
+            position: absolute; top: 0; left: 0; width: 100%; height: 0%;
+            background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan);
+            transition: height 0.1s ease-out;
         }
-        .logo-track:hover { animation-play-state: paused; }
-        .logo-item {
-            display: inline-block;
-            color: var(--text-muted);
-            font-weight: 900;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif;
-            margin: 0 40px;
-            opacity: 0.6;
+        .timeline-item {
+            position: relative; padding-left: 60px; margin-bottom: 60px;
+            opacity: 0; transform: translateY(30px); transition: all 0.8s ease;
+        }
+        .timeline-item.active { opacity: 1; transform: translateY(0); }
+        .timeline-dot {
+            position: absolute; left: 12px; top: 0; width: 20px; height: 20px;
+            background: var(--bg-color); border: 3px solid var(--neon-cyan);
+            border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan);
             transition: all 0.3s;
-            cursor: pointer;
         }
+        .timeline-item.active .timeline-dot {
+            background: var(--neon-cyan); box-shadow: 0 0 25px var(--neon-cyan);
+        }
+        .timeline-year {
+            font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900;
+            color: var(--neon-cyan); text-shadow: 0 0 10px rgba(57, 197, 187, 0.5); margin-bottom: 10px;
+        }
+        .timeline-content {
+            background: var(--card-bg); border: 1px solid rgba(57, 197, 187, 0.2);
+            padding: 20px; border-radius: 4px; backdrop-filter: blur(5px);
+        }
+
+        /* 身份选择 */
+        .fork-container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+        .fork-btn {
+            background: rgba(15, 15, 25, 0.8); border: 1px solid var(--neon-cyan);
+            color: var(--text-main); padding: 20px 40px; font-size: 1.1rem; font-weight: bold;
+            /* 专门针对按钮的中文字体修复 */
+            font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif;
+            transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .fork-btn:hover { background: rgba(57, 197, 187, 0.2); box-shadow: 0 0 20px rgba(57, 197, 187, 0.4); transform: translateY(-5px); }
+
+        /* 隐藏的 SEO 文本 */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+        /* --- 加盟企业 Logo 墙 --- */
+        .logo-marquee { overflow: hidden; white-space: nowrap; position: relative; padding: 20px 0; border-top: 1px dashed rgba(57, 197, 187, 0.2); border-bottom: 1px dashed rgba(57, 197, 187, 0.2); margin-top: 30px; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        .logo-track { display: inline-block; animation: scrollLogos 25s linear infinite; }
+        .logo-track:hover { animation-play-state: paused; }
+        .logo-item { display: inline-block; color: var(--text-muted); font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron', sans-serif; margin: 0 40px; opacity: 0.6; transition: all 0.3s; cursor: pointer; }
         .logo-item:hover { color: var(--neon-cyan); opacity: 1; text-shadow: 0 0 10px var(--neon-cyan); }
         @keyframes scrollLogos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -149,7 +195,7 @@
 
         /* --- SHOWCASE Tabs --- */
         .tab-container { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab-btn { background: transparent; border: 1px solid rgba(0, 229, 255, 0.4); color: var(--neon-cyan); padding: 8px 20px; font-size: 0.9rem; font-weight: 700; transition: all 0.3s; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+        .tab-btn { background: transparent; border: 1px solid rgba(57, 197, 187, 0.4); color: var(--neon-cyan); padding: 8px 20px; font-size: 0.9rem; font-weight: 700; transition: all 0.3s; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif;}
         .tab-btn.active, .tab-btn:hover { background: rgba(255, 61, 127, 0.2); border-color: var(--neon-pink); color: #FFF; box-shadow: 0 0 15px rgba(255, 61, 127, 0.4); }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
@@ -157,22 +203,22 @@
 
         /* 卡片 */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); padding: 25px; border: 1px solid rgba(0, 229, 255, 0.2); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; backdrop-filter: blur(5px); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); }
+        .card { background: var(--card-bg); padding: 25px; border: 1px solid rgba(57, 197, 187, 0.2); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; backdrop-filter: blur(5px); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); }
         .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
         .card:hover { border-color: var(--neon-pink); box-shadow: 0 0 30px rgba(255, 61, 127, 0.2); transform: translateY(-5px); }
         .card:hover::before { transform: scaleX(1); }
         .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; margin-top: 10px; }
-        .product-image { background: rgba(0,0,0,0.5); height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px; border: 1px dashed rgba(0, 229, 255, 0.3); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); position: relative; overflow: hidden; }
+        .product-image { background: rgba(0,0,0,0.5); height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px; border: 1px dashed rgba(57, 197, 187, 0.3); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); position: relative; overflow: hidden; }
         .product-image::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-25deg); transition: 0.5s; }
         .card:hover .product-image::after { left: 100%; }
         .badge { background: rgba(255, 61, 127, 0.2); color: var(--neon-pink); padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--neon-pink); display: inline-block; font-weight: bold; }
-        .badge-cyan { background: rgba(0, 229, 255, 0.2); color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        .badge-cyan { background: rgba(57, 197, 187, 0.2); color: var(--neon-cyan); border-color: var(--neon-cyan); }
         .card-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
         .insta-btn { display: block; text-align: center; margin-top: 15px; padding: 12px; background: transparent; color: var(--neon-pink); border: 1px solid var(--neon-pink); text-decoration: none; font-weight: bold; transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .insta-btn:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 20px rgba(255, 61, 127, 0.6); }
 
         /* ================= Footer 与 Legal ================= */
-        .site-footer { background: rgba(5, 5, 10, 0.9); border-top: 1px solid rgba(0, 229, 255, 0.2); padding: 40px 20px 20px; position: relative; z-index: 10; margin-top: auto; }
+        .site-footer { background: rgba(5, 5, 10, 0.9); border-top: 1px solid rgba(57, 197, 187, 0.2); padding: 40px 20px 20px; position: relative; z-index: 10; margin-top: auto; }
         .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .footer-brand { font-family: 'Orbitron', sans-serif; color: var(--neon-pink); font-size: 1.5rem; font-weight: 900; text-shadow: 0 0 10px rgba(255,61,127,0.5); }
         .legal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px 25px; }
@@ -194,24 +240,23 @@
             .header-inner { justify-content: center; flex-direction: column; gap: 10px; }
             .main-nav { gap: 10px; justify-content: center; }
             .main-nav a, .lang-switch a { margin-left: 0; font-size: 0.8rem; }
-            
             .portal-title { font-size: 1.8rem; letter-spacing: 2px; padding: 0 10px; }
             .portal-subtitle { font-size: 0.9rem; }
             .lang-btn { padding: 12px 30px; font-size: 1rem; }
-            
             .site-content { padding: 120px 15px 60px; }
             .neon-heading { font-size: 1.5rem; }
-            
             .stats-bar { flex-direction: column; gap: 15px; }
             .stat-num { font-size: 1.8rem; }
-            
             .grid-3 { grid-template-columns: 1fr; }
             .tab-btn { padding: 6px 12px; font-size: 0.8rem; }
-            
             .logo-item { margin: 0 20px; font-size: 1rem; }
-            
             .legal-links { flex-direction: column; align-items: center; gap: 10px; }
             .modal-content { padding: 20px; }
+            .timeline-track { left: 10px; }
+            .timeline-item { padding-left: 40px; }
+            .timeline-dot { left: 2px; }
+            .guide-box { padding: 30px 20px; }
+            .fork-btn { width: 100%; padding: 15px; }
         }
     </style>
 </head>
@@ -223,7 +268,7 @@
         <div class="header-inner">
             <a href="#" class="site-logo">JAGA</a>
             <nav class="main-nav">
-                <a href="#about" data-i18n="nav_about">協会概要</a>
+                <a href="#archives" data-i18n="nav_about">協会概要</a>
                 <a href="#services" data-i18n="nav_services">業務内容</a>
                 <a href="#shop" data-i18n="nav_shop">ショーケース</a>
             </nav>
@@ -235,37 +280,87 @@
         </div>
     </header>
 
-    <!-- 修复后的光门区域 -->
+    <!-- 光门区域 -->
     <div class="portal-hero" id="portal-hero">
-        <!-- 视频背景 -->
         <video autoplay loop muted playsinline class="bg-video">
             <source src="bg-video.mp4" type="video/mp4">
         </video>
-
-        <!-- 光束爆炸特效 -->
         <div class="portal-beam"></div>
-
-        <!-- 语言选择按钮 -->
+        
         <div class="portal-lang-select" id="portal-lang-select">
             <a onclick="triggerPortal('ja')" class="lang-btn">日本語</a>
             <a onclick="triggerPortal('zh')" class="lang-btn">中文</a>
             <a onclick="triggerPortal('en')" class="lang-btn">English</a>
         </div>
 
-        <!-- 光门本体 -->
         <div class="portal-gate" id="portal-gate">
             <h1 class="portal-title" id="portal-title">日本アニメ・ゲーム協会</h1>
             <p class="portal-subtitle" id="portal-subtitle">アニメとゲームで、世界をつなぐ</p>
-            <a href="#about" class="portal-button" onclick="scrollToMain()">サイトへ入る</a>
+            <!-- 点击进入直接触发向导 -->
+            <a class="portal-button" onclick="showGuide()" data-i18n="portal_btn">サイトへ入る</a>
+        </div>
+    </div>
+
+    <!-- ================= 全屏向导系统 ================= -->
+    <div class="guide-overlay" id="guide-overlay">
+        <div class="guide-box">
+            <!-- 纯 CSS 画的像素风向导 JAGI -->
+            <div class="guide-avatar"></div>
+            <div class="guide-text" id="guide-text"></div>
+            <button class="guide-btn" id="guide-btn" onclick="closeGuide()" data-i18n="guide_btn">データ読み込み開始</button>
         </div>
     </div>
 
     <main id="main" class="site-content">
-        <section id="about" class="section">
-            <h2 class="neon-heading" data-i18n="head_about">ABOUT JAGA</h2>
-            <p data-i18n="desc_about"></p>
+        <!-- 叙事主线：档案时间线 -->
+        <section id="archives" class="section timeline-section">
+            <h2 class="neon-heading" data-i18n="head_about">JAGA ARCHIVES</h2>
             
-            <!-- 加盟企业 Logo 墙（已使用你填写的真实企业） -->
+            <!-- 隐藏的 SEO 文本 -->
+            <p class="sr-only" data-i18n="desc_about"></p>
+
+            <div class="timeline-track">
+                <div class="timeline-progress" id="timeline-progress"></div>
+            </div>
+
+            <!-- 时间线节点 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2012</div>
+                <div class="timeline-content">
+                    <h3 data-i18n="tl_2012_t">協会設立</h3>
+                    <p data-i18n="tl_2012_d">日本国内のゲーム・アニメ制作会社、個人クリエイターらが集結。業界の垣根を超えたリソース統合の基盤がここに誕生しました。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2017</div>
+                <div class="timeline-content">
+                    <h3 data-i18n="tl_2017_t">クロスボーダー展開</h3>
+                    <p data-i18n="tl_2017_d">海外市場（主に中華圏）への本格進出を開始。複雑な中間業者を排除し、現地パートナーとの直接的なライセンス・ローカライズ網を確立。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2023</div>
+                <div class="timeline-content">
+                    <h3 data-i18n="tl_2023_t">文化交流と実績の蓄積</h3>
+                    <p data-i18n="tl_2023_d">中日アニメ・ゲーム文化交流フォーラムの主催など、大規模なクロスカルチャーイベントを成功裡に実施。累計50社以上の企業ネットワークが確立。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2026</div>
+                <div class="timeline-content">
+                    <h3 data-i18n="tl_2026_t">次世代へのアップデート</h3>
+                    <p data-i18n="tl_2026_d">デジタルアーカイブシステムを構築。さらに多くのIPとクリエイターが国境を越えて活躍できるエコシステムを目指します。</p>
+                </div>
+            </div>
+
+            <!-- 加入企业Logo墙（保留） -->
             <div class="logo-marquee">
                 <div class="logo-track">
                     <span class="logo-item">WOODS CORPORATIONS</span>
@@ -275,7 +370,7 @@
                     <span class="logo-item">HASH FUTURE</span>
                     <span class="logo-item">Gainslink</span>
                     <span class="logo-item">MAHA</span>
-                    <!-- 重复一次实现无缝滚动 -->
+                    <!-- 重复 -->
                     <span class="logo-item">WOODS CORPORATIONS</span>
                     <span class="logo-item">SALVO GAMES</span>
                     <span class="logo-item">NANJIN STUDIO</span>
@@ -285,8 +380,19 @@
                     <span class="logo-item">MAHA</span>
                 </div>
             </div>
+
+            <!-- 身份选择分支 (Forking) -->
+            <div style="text-align: center; margin-top: 60px;">
+                <h3 style="color: var(--neon-cyan); margin-bottom: 20px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;" data-i18n="fork_title">身份验证完毕。请选择您希望查看的档案分类：</h3>
+                <div class="fork-container">
+                    <button class="fork-btn" onclick="scrollToElement('services')" data-i18n="fork_1">IP版权方</button>
+                    <button class="fork-btn" onclick="scrollToElement('services')" data-i18n="fork_2">游戏开发商</button>
+                    <button class="fork-btn" onclick="scrollToElement('shop')" data-i18n="fork_3">个人创作者</button>
+                </div>
+            </div>
         </section>
 
+        <!-- 业务内容 -->
         <section id="services" class="section">
             <h2 class="neon-heading" data-i18n="head_services">SERVICES</h2>
             <div class="grid-3">
@@ -296,6 +402,7 @@
             </div>
         </section>
 
+        <!-- 展柜 -->
         <section id="shop" class="section">
             <h2 class="neon-heading" data-i18n="head_shop">SHOWCASE</h2>
             
@@ -380,7 +487,23 @@
             ja: {
                 nav_about: "協会概要", nav_services: "業務内容", nav_shop: "ショーケース",
                 portal_title: "日本アニメ・ゲーム協会", portal_sub: "アニメとゲームで、世界をつなぐ", portal_btn: "サイトへ入る",
-                head_about: "協会概要 (ABOUT)", desc_about: "日本アニメ・ゲーム協会は2012年に設立されました。協会の会員は以下を含みます：\n日本国内および海外のゲーム制作・発行・運営企業、アニメ制作会社、メディア制作会社、広告会社、個人画家、アニメクリエイターなどの創作力を持つ者。\n協会は会員企業または個人のプラットフォーム内のリソースを統合し、強みを相互補完することに取り組んでいます。\n対外的に業務ルートを一元化し、複数の仲介手続きによるコンテンツ・リソースの複雑化を回避し、会員企業や個人のリソース共有の有効性を高めます。\n現在、累計50社の会員企業、数十名の個人クリエイター、作家、芸術家が在籍しています。",
+                
+                guide_text: "ようこそ、JAGA中央アーカイブへ。\n私はガイドのJAGIです。機密保持契約のため一部データは暗号化されていますが、当協会の最も誇らしい歩みをご案内します。\n\nスクロールしてデータの読み込みを開始してください。",
+                guide_btn: "データ読み込み開始",
+                
+                head_about: "JAGA ARCHIVES", 
+                desc_about: "日本アニメ・ゲーム協会は2012年に設立されました。協会の会員は以下を含みます：\n日本国内および海外のゲーム制作・発行・運営企業、アニメ制作会社、メディア制作会社、広告会社、個人画家、アニメクリエイターなどの創作力を持つ者。\n協会は会員企業または個人のプラットフォーム内のリソースを統合し、強みを相互補完することに取り組んでいます。\n対外的に業務ルートを一元化し、複数の仲介手続きによるコンテンツ・リソースの複雑化を回避し、会員企業や個人のリソース共有の有効性を高めます。\n現在、累計50社の会員企業、数十名の個人クリエイター、作家、芸術家が在籍しています。",
+                
+                tl_2012_t: "協会設立", tl_2012_d: "日本国内のゲーム・アニメ制作会社、個人クリエイターらが集結。業界の垣根を超えたリソース統合の基盤がここに誕生しました。",
+                tl_2017_t: "クロスボーダー展開", tl_2017_d: "海外市場（主に中華圏）への本格進出を開始。複雑な中間業者を排除し、現地パートナーとの直接的なライセンス・ローカライズ網を確立。",
+                tl_2023_t: "文化交流と実績の蓄積", tl_2023_d: "中日アニメ・ゲーム文化交流フォーラムの主催など、大規模なクロスカルチャーイベントを成功裡に実施。累計50社以上の企業ネットワークが確立。",
+                tl_2026_t: "次世代へのアップデート", tl_2026_d: "デジタルアーカイブシステムを構築。さらに多くのIPとクリエイターが国境を越えて活躍できるエコシステムを目指します。",
+                
+                fork_title: "身元確認が完了しました。閲覧するアーカイブの分類を選択してください：", 
+                fork_1: "IPライセンサー", 
+                fork_2: "ゲーム開発者", 
+                fork_3: "個人クリエイター",
+
                 head_services: "業務内容 (SERVICES)", 
                 srv_1_t: "コンテンツ輸出", srv_1_d: "海外展開のサポート、ローカライズ、プロモーション企画。", 
                 srv_2_t: "版権管理", srv_2_d: "海外市場における日本IPライセンシー依頼・企画管理。", 
@@ -391,7 +514,7 @@
                 auth_license: "公式ライセンス", auth_partner: "提携プロジェクト", auth_event: "公式イベント", auth_soldout: "完売御礼",
                 game_1_t: "SALVO GAMES", game_1_m1: "協力：SALVO GAMES", game_1_m2: "授権地域：中国・東南アジア",
                 game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：NANJINスタジオ", game_2_m2: "展開：2023年より全世界",
-                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
+                culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
                 merch_1_t: "一騎当千 関羽 1/4スケールフィギュア", merch_1_d: "JAGA会員企業による製造・販売実績", merch_btn: "Instagramで詳細確認",
                 legal_privacy: "プライバシーポリシー", legal_external: "外部送信方針", legal_terms: "サイト利用規約", legal_disclaimer: "免責事項", legal_tokushoho: "特定商取引法に基づく表記",
                 modal_privacy_title: "プライバシーポリシー",
@@ -408,14 +531,27 @@
             zh: {
                 nav_about: "协会概要", nav_services: "业务内容", nav_shop: "实力展柜",
                 portal_title: "日本动漫游戏协会", portal_sub: "用动漫与游戏连接世界", portal_btn: "点击进入",
-                head_about: "协会概要 (ABOUT)", desc_about: "日本动漫游戏协会成立于2012年，协会成员包括：\n日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。\n协会致力于整合协会成员公司或个人平台内部资源，优势互补；\n对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。\n目前累计50家成员企业，及数十名个人创作者、作家及艺术家。",
+                
+                guide_text: "欢迎接入 JAGA 中央档案系统。\n我是您的向导 JAGI。由于保密协议，部分档案已加密，但我将为您展示我们最引以为傲的历程。\n\n请跟随我，向下滚动开始读取数据。",
+                guide_btn: "开始读取数据",
+                
+                head_about: "JAGA ARCHIVES", 
+                desc_about: "日本动漫游戏协会成立于2012年，协会成员包括：\n日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。\n协会致力于整合协会成员公司或个人平台内部资源，优势互补；\n对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。\n目前累计50家成员企业，及数十名个人创作者、作家及艺术家。",
+                
+                tl_2012_t: "协会设立", tl_2012_d: "日本国内游戏与动漫制作公司、个人创作者集结。跨越行业壁垒的资源整合基石在此诞生。",
+                tl_2017_t: "跨境展开", tl_2017_d: "正式进军海外市场（以中华圈为主）。排除复杂的中间商，与当地合作伙伴建立直接的版权与本地化网络。",
+                tl_2023_t: "文化交流与实绩积累", tl_2023_d: "成功举办中日动漫游戏文化交流论坛等大规模跨文化活动。累计确立50家以上的企业网络。",
+                tl_2026_t: "向次世代升级", tl_2026_d: "构建数字档案系统。目标是为更多IP和创作者跨越国界活跃的生态系统。",
+                
+                fork_title: "身份验证完毕。请选择您希望查看的档案分类：", fork_1: "IP版权方", fork_2: "游戏开发商", fork_3: "个人创作者",
+
                 head_services: "业务内容 (SERVICES)", srv_1_t: "内容输出", srv_1_d: "海外拓展支持、本地化、宣传企划。", srv_2_t: "版权管理", srv_2_d: "海外市场日本IP的版权案件委托与企划管理。", srv_3_t: "本地化平台", srv_3_d: "与当地企业对接、市场测试、收益回收。",
                 head_shop: "实力展示 (SHOWCASE)", stat_1: "成员企业", stat_2: "授权项目", stat_3: "覆盖国家地区",
                 tab_game: "🎮 游戏授权", tab_culture: "🏮 文化交流", tab_merch: "🧸 实体周边",
                 auth_license: "官方授权", auth_partner: "合作项目", auth_event: "官方活动", auth_soldout: "已售罄",
                 game_1_t: "SALVO GAMES", game_1_m1: "合作方：SALVO GAMES", game_1_m2: "授权区域：中国大陆/东南亚",
                 game_2_t: "智能手机对战游戏", game_2_m1: "开发：南进工作室", game_2_m2: "发行：2023年起全球上线",
-                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
+                culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
                 merch_1_t: "一骑当千 关羽 1/4 手办", merch_1_d: "JAGA会员企业制造与销售实绩", merch_btn: "前往 Instagram 确认",
                 legal_privacy: "隐私政策", legal_external: "外部送信方针", legal_terms: "网站利用规约", legal_disclaimer: "免责事项", legal_tokushoho: "特定商取引法相关标注",
                 modal_privacy_title: "隐私政策",
@@ -432,14 +568,30 @@
             en: {
                 nav_about: "About", nav_services: "Services", nav_shop: "Showcase",
                 portal_title: "Japan Animations Games Association", portal_sub: "Connecting the world through Anime and Games", portal_btn: "ENTER",
-                head_about: "ABOUT JAGA", desc_about: "The Japan Anime & Game Association was founded in 2012. Its members include:\nGame development, publishing and operating companies in Japan and overseas; anime production companies; media production companies; advertising agencies; individual illustrators; anime creators and other talented creators.\nThe association is committed to integrating internal resources from its member companies and individual platforms to achieve complementary advantages;\nIt unifies external business channels, avoids the complication of resources and content caused by multi-layer intermediate operations, and improves the effectiveness of resource sharing among member enterprises and individuals.\nAt present, it has a total of 50 member enterprises, as well as dozens of individual creators, writers and artists.",
+                
+                guide_text: "Welcome to the JAGA Central Archives.\nI am JAGI, your guide. Due to NDAs, some files are encrypted, but I will show you our most proud journey.\n\nPlease scroll down to begin reading data.",
+                guide_btn: "Initialize Data",
+                
+                head_about: "JAGA ARCHIVES", 
+                desc_about: "The Japan Anime & Game Association was founded in 2012. Its members include:\nGame development, publishing and operating companies in Japan and overseas; anime production companies; media production companies; advertising agencies; individual illustrators; anime creators and other talented creators.\nThe association is committed to integrating internal resources from its member companies and individual platforms to achieve complementary advantages;\nIt unifies external business channels, avoids the complication of resources and content caused by multi-layer intermediate operations, and improves the effectiveness of resource sharing among member enterprises and individuals.\nAt present, it has a total of 50 member enterprises, as well as dozens of individual creators, writers and artists.",
+                
+                tl_2012_t: "Association Established", tl_2012_d: "Game and anime production companies and individual creators gathered. The foundation for cross-industry resource integration was born here.",
+                tl_2017_t: "Cross-Border Expansion", tl_2017_d: "Started full-scale entry into overseas markets (mainly Greater China). Eliminated complex middlemen to establish direct licensing and localization networks.",
+                tl_2023_t: "Cultural Exchange & Milestones", tl_2023_d: "Successfully held large-scale cross-cultural events like the China-Japan ACG Forum. Established a network of over 50 enterprises.",
+                tl_2026_t: "Next-Gen Update", tl_2026_d: "Building a digital archive system. Aiming for an ecosystem where more IPs and creators can thrive across borders.",
+                
+                fork_title: "Identity verified. Please select the archive category you wish to view:", 
+                fork_1: "IP Holder", 
+                fork_2: "Game Developer", 
+                fork_3: "Creator",
+
                 head_services: "SERVICES", srv_1_t: "Content Export", srv_1_d: "Overseas expansion support, localization, and promotion planning.", srv_2_t: "Licensing", srv_2_d: "Copyright management and supervision for Japanese IP in overseas markets.", srv_3_t: "Localization", srv_3_d: "Local enterprise matching, market testing, and revenue collection.",
                 head_shop: "SHOWCASE", stat_1: "Members", stat_2: "Projects", stat_3: "Countries",
                 tab_game: "🎮 Game Licensing", tab_culture: "🏮 Culture Exchange", tab_merch: "🧸 Merchandise",
                 auth_license: "Official License", auth_partner: "Partner Project", auth_event: "Official Event", auth_soldout: "SOLD OUT",
                 game_1_t: "SALVO GAMES", game_1_m1: "Partner: SALVO Games", game_1_m2: "Authorized Region: Chinese Mainland / Southeast Asia",
                 game_2_t: "Mobile Battle Game", game_2_m1: "Dev: NANJIN Studio", game_2_m2: "Launch: Global from 2023",
-                culture_1_t: "2023 China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
+                culture_1_t: "China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
                 merch_1_t: "Kanwu Itsukitousen 1/4 Scale Figure", merch_1_d: "Manufactured and sold by JAGA member", merch_btn: "Check on Instagram",
                 legal_privacy: "Privacy Policy", legal_external: "External Transmission", legal_terms: "Terms of Use", legal_disclaimer: "Disclaimer", legal_tokushoho: "Commercial Disclosure",
                 modal_privacy_title: "Privacy Policy",
@@ -499,8 +651,83 @@
             }, 600);
         }
 
-        function scrollToMain() {
-            document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
+        // ================= 向导交互系统 =================
+        let typeWriterTimer;
+
+        function showGuide() {
+            const overlay = document.getElementById('guide-overlay');
+            const textEl = document.getElementById('guide-text');
+            const btn = document.getElementById('guide-btn');
+            
+            overlay.classList.add('active');
+            btn.classList.remove('show');
+            
+            const fullText = i18n[currentLang].guide_text;
+            let i = 0;
+            textEl.innerHTML = '';
+            
+            clearInterval(typeWriterTimer);
+            
+            typeWriterTimer = setInterval(() => {
+                if (i < fullText.length) {
+                    textEl.innerHTML += fullText.charAt(i) === '\n' ? '<br>' : fullText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeWriterTimer);
+                    btn.classList.add('show');
+                }
+            }, 40);
+        }
+
+        function closeGuide() {
+            document.getElementById('guide-overlay').classList.remove('active');
+            document.getElementById('archives').scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                initTimelineObserver();
+            }, 500);
+        }
+
+        // ================= 时间线滚动动画 =================
+        function initTimelineObserver() {
+            const items = document.querySelectorAll('.timeline-item');
+            const progressBar = document.getElementById('timeline-progress');
+            const section = document.querySelector('.timeline-section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            items.forEach(item => observer.observe(item));
+
+            window.addEventListener('scroll', () => {
+                if (!section) return;
+                const rect = section.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                let scrollPercentage = 0;
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                     const totalDist = rect.height - windowHeight;
+                     const scrolled = -rect.top;
+                     if (totalDist > 0) {
+                        scrollPercentage = (scrolled / totalDist) * 100;
+                     } else {
+                        scrollPercentage = 100;
+                     }
+                } else if (rect.bottom <= 0) {
+                    scrollPercentage = 100;
+                }
+                
+                progressBar.style.height = `${Math.max(0, Math.min(100, scrollPercentage))}%`;
+            });
+        }
+
+        function scrollToElement(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
         function switchTab(tabId) {
@@ -510,13 +737,12 @@
             document.getElementById(`tab-${tabId}`).classList.add('active');
         }
 
-        // Modal 逻辑
         function openModal(type) {
             const dict = i18n[currentLang];
             document.getElementById('modal-title').innerText = dict[`modal_${type}_title`];
             document.getElementById('modal-body').innerText = dict[`modal_${type}_body`];
             document.getElementById('legal-modal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
@@ -528,7 +754,10 @@
             if (e.target === this) closeModal();
         });
 
-        window.onload = () => { switchLanguage('ja'); };
+        window.onload = () => { 
+            switchLanguage('ja'); 
+            initTimelineObserver();
+        };
     </script>
 </body>
 </html>
