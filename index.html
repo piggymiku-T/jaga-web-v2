@@ -20,7 +20,6 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            /* 核心：优先系统原生中文字体，保证绝对平整不粗糙 */
             font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, "Noto Sans SC", "Noto Sans JP", sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
@@ -144,7 +143,7 @@
         .card:hover::before { transform: scaleX(1); }
         .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; margin-top: 10px; }
         
-        /* ====== 图片核心样式 ====== */
+        /* ====== 图片/视频核心样式 ====== */
         .product-image { 
             background: rgba(0,0,0,0.5); height: 180px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
@@ -153,25 +152,27 @@
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); 
             position: relative; overflow: hidden; 
         }
-        /* 图片铺满自适应 */
-        .product-image img {
+        /* 图片和视频都铺满自适应 */
+        .product-image img, .product-image video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 1; transition: transform 0.5s ease;
         }
-        .card:hover .product-image img { transform: scale(1.08); }
-        /* 扫光层必须在图片之上 */
+        .card:hover .product-image img, .card:hover .product-image video { transform: scale(1.08); }
+        
+        /* 扫光层必须在图片/视频之上 */
         .product-image::after { 
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; 
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent); 
-            transform: skewX(-25deg); transition: 0.5s; z-index: 2; 
+            transform: skewX(-25deg); transition: 0.5s; z-index: 2; pointer-events: none;
         }
         .card:hover .product-image::after { left: 100%; }
-        /* 如果图片没加载出来，文字会显示在中间 */
+        
         .product-image span { z-index: 3; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
         .badge { background: rgba(255, 61, 127, 0.2); color: var(--neon-pink); padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--neon-pink); display: inline-block; font-weight: bold; }
         .badge-cyan { background: rgba(57, 197, 187, 0.2); color: var(--neon-cyan); border-color: var(--neon-cyan); }
         .card-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+        
         .insta-btn { display: block; text-align: center; margin-top: 15px; padding: 12px; background: transparent; color: var(--neon-pink); border: 1px solid var(--neon-pink); text-decoration: none; font-weight: bold; transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .insta-btn:hover { background: var(--neon-pink); color: #FFF; box-shadow: 0 0 20px rgba(255, 61, 127, 0.6); }
 
@@ -297,7 +298,7 @@
 
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-year">2018</div>
+                <div class="timeline-year">2023</div>
                 <div class="timeline-content">
                     <h3 data-i18n="tl_2023_t">文化交流と実績の蓄積</h3>
                     <p data-i18n="tl_2023_d">中日アニメ・ゲーム文化交流フォーラムの主催など、大規模なクロスカルチャーイベントを成功裡に実施。累計50社以上の企業ネットワークが確立。</p>
@@ -374,7 +375,6 @@
             <div id="tab-game" class="tab-content active">
                 <div class="grid-3">
                     <div class="card">
-                        <!-- 替换为真实图片 SALVO.jpg -->
                         <div class="product-image">
                             <img src="SALVO.jpg" alt="SALVO GAMES">
                         </div>
@@ -383,7 +383,6 @@
                         <div class="card-meta"><div data-i18n="game_1_m1"></div><div data-i18n="game_1_m2"></div></div>
                     </div>
                     <div class="card">
-                        <!-- 替换为真实图片 Gainslink.jpg -->
                         <div class="product-image">
                             <img src="Gainslink.jpg" alt="Gainslink">
                         </div>
@@ -398,7 +397,6 @@
             <div id="tab-culture" class="tab-content">
                 <div class="grid-3">
                     <div class="card">
-                        <!-- 替换为真实图片 event1.jpg -->
                         <div class="product-image">
                             <img src="event1.jpg" alt="文化交流论坛">
                         </div>
@@ -409,16 +407,31 @@
                 </div>
             </div>
 
-            <!-- 实体周边 Tab -->
+            <!-- 实体周边 Tab (更新了两个SKU) -->
             <div id="tab-merch" class="tab-content">
                 <div class="grid-3">
+                    <!-- SKU 1: 视频 -->
                     <div class="card">
-                        <!-- 这块你还没传图，保留占位文字 -->
-                        <div class="product-image"><span>[ 待上传手办图 ]</span></div>
+                        <div class="product-image">
+                            <!-- 请将 src 替换为你上传的视频文件名，例如 figure-video.mp4 -->
+                            <video autoplay loop muted playsinline src="figure-video.mp4" alt="Ikkitousen Video"></video>
+                        </div>
                         <span class="badge" data-i18n="auth_soldout"></span>
-                        <h3 data-i18n="merch_1_t"></h3>
-                        <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 0;" data-i18n="merch_1_d"></p>
-                        <a href="https://www.instagram.com/" target="_blank" class="insta-btn" data-i18n="merch_btn"></a>
+                        <h3 data-i18n="merch_video_t"></h3>
+                        <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 0;" data-i18n="merch_video_d"></p>
+                        <a href="https://www.instagram.com/figurer_media?psln=bHhrd21hY2hxeTB1&utm_source=qr" target="_blank" class="insta-btn" data-i18n="merch_btn"></a>
+                    </div>
+                    
+                    <!-- SKU 2: 图片 -->
+                    <div class="card">
+                        <div class="product-image">
+                            <!-- 请将 src 替换为你上传的图片文件名，例如 figure-image.jpg -->
+                            <img src="figure-image.jpg" alt="Ikkitousen Figure">
+                        </div>
+                        <span class="badge" data-i18n="auth_license"></span>
+                        <h3 data-i18n="merch_img_t"></h3>
+                        <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 0;" data-i18n="merch_img_d"></p>
+                        <a href="https://www.instagram.com/figurer_media?psln=bHhrd21hY2hxeTB1&utm_source=qr" target="_blank" class="insta-btn" data-i18n="merch_btn"></a>
                     </div>
                 </div>
             </div>
@@ -453,23 +466,16 @@
             ja: {
                 nav_about: "協会概要", nav_services: "業務内容", nav_shop: "ショーケース",
                 portal_title: "日本アニメ・ゲーム協会", portal_sub: "アニメとゲームで、世界をつなぐ", portal_btn: "サイトへ入る",
-                
                 guide_text: "ようこそ、JAGA中央アーカイブへ。\n私はガイドのJAGIです。機密保持契約のため一部データは暗号化されていますが、当協会の最も誇らしい歩みをご案内します。\n\nスクロールしてデータの読み込みを開始してください。",
                 guide_btn: "データ読み込み開始",
-                
                 head_about: "JAGA ARCHIVES", 
                 desc_about: "日本アニメ・ゲーム協会は2012年に設立されました。協会の会員は以下を含みます：\n日本国内および海外のゲーム制作・発行・運営企業、アニメ制作会社、メディア制作会社、広告会社、個人画家、アニメクリエイターなどの創作力を持つ者。\n協会は会員企業または個人のプラットフォーム内のリソースを統合し、強みを相互補完することに取り組んでいます。\n対外的に業務ルートを一元化し、複数の仲介手続きによるコンテンツ・リソースの複雑化を回避し、会員企業や個人のリソース共有の有効性を高めます。\n現在、累計50社の会員企業、数十名の個人クリエイター、作家、芸術家が在籍しています。",
-                
                 tl_2012_t: "協会設立", tl_2012_d: "日本国内のゲーム・アニメ制作会社、個人クリエイターらが集結。業界の垣根を超えたリソース統合の基盤がここに誕生しました。",
                 tl_2017_t: "クロスボーダー展開", tl_2017_d: "海外市場（主に中華圏）への本格進出を開始。複雑な中間業者を排除し、現地パートナーとの直接的なライセンス・ローカライズ網を確立。",
                 tl_2023_t: "文化交流と実績の蓄積", tl_2023_d: "中日アニメ・ゲーム文化交流フォーラムの主催など、大規模なクロスカルチャーイベントを成功裡に実施。累計50社以上の企業ネットワークが確立。",
                 tl_2026_t: "次世代へのアップデート", tl_2026_d: "デジタルアーカイブシステムを構築。さらに多くのIPとクリエイターが国境を越えて活躍できるエコシステムを目指します。",
-                
                 fork_title: "身元確認が完了しました。閲覧するアーカイブの分類を選択してください：", 
-                fork_1: "IPライセンサー", 
-                fork_2: "ゲーム開発者", 
-                fork_3: "個人クリエイター",
-
+                fork_1: "IPライセンサー", fork_2: "ゲーム開発者", fork_3: "個人クリエイター",
                 head_services: "業務内容 (SERVICES)", 
                 srv_1_t: "コンテンツ輸出", srv_1_d: "海外展開のサポート、ローカライズ、プロモーション企画。", 
                 srv_2_t: "版権管理", srv_2_d: "海外市場における日本IPライセンシー依頼・企画管理。", 
@@ -480,96 +486,75 @@
                 auth_license: "公式ライセンス", auth_partner: "提携プロジェクト", auth_event: "公式イベント", auth_soldout: "完売御礼",
                 game_1_t: "SALVO GAMES", game_1_m1: "協力：SALVO GAMES", game_1_m2: "授権地域：中国・東南アジア",
                 game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：Gainslink", game_2_m2: "展開：2023年より全世界",
-                culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
-                merch_1_t: "一騎当千 関羽 1/4スケールフィギュア", merch_1_d: "JAGA会員企業による製造・販売実績", merch_btn: "Instagramで詳細確認",
+                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
+                merch_video_t: "一騎当千 関羽 1/4スケールフィギュア (映像)", merch_video_d: "JAGA会員企業による製造・販売実績",
+                merch_img_t: "一騎当千 関羽 1/4スケールフィギュア (画像)", merch_img_d: "JAGA会員企業による製造・販売実績",
+                merch_btn: "Instagramで詳細確認",
                 legal_privacy: "プライバシーポリシー", legal_external: "外部送信方針", legal_terms: "サイト利用規約", legal_disclaimer: "免責事項", legal_tokushoho: "特定商取引法に基づく表記",
-                modal_privacy_title: "プライバシーポリシー",
-                modal_privacy_body: "日本アニメ・ゲーム協会（以下「当協会」）は、個人情報の保護に関する法律を遵守し、以下の通りプライバシーポリシーを定めます。\n\n1. 個人情報の取得：当協会は、適法かつ公正な手段をもって個人情報を取得します。\n2. 利用目的：お問い合わせへの回答、協会業務の運営・改善、マーケティング分析等に利用します。\n3. 第三者提供：法令に基づく場合を除き、本人の同意なく第三者に提供しません。\n4. 安全管理措置：個人情報の漏洩、滅失、毀損の防止その他の安全管理のために必要かつ適切な措置を講じます。\n\nお問い合わせ窓口：info@j-aga.jp",
-                modal_external_title: "外部送信方針（Cookie等）",
-                modal_external_body: "当サイトでは、利用者の利便性向上およびサイトの改善のため、Cookie等の技術を使用し、外部の第三者（Google Analytics等）に情報を送信することがあります。\n\n送信される情報：Cookie ID、閲覧履歴、IPアドレス等\n送信先：Google LLC (Google Analytics)\n利用目的：アクセス解析、サービス改善\n\nブラウザの設定によりCookieを無効化することで、外部送信を拒否することが可能です。",
-                modal_terms_title: "サイト利用規約",
-                modal_terms_body: "本ウェブサイト（以下「本サイト」）は、日本アニメ・ゲーム協会（以下「当協会」）が運営しています。\n\n第1条（適用）本規約は、利用者と当協会との間の本サイトの利用に関わる一切の関係に適用されます。\n第2条（禁止事項）利用者は、本サイトの利用にあたり、以下の行為をしてはなりません。\n(1) 法令または公序良俗に違反する行為\n(2) 当協会または第三者の知的財産権を侵害する行為\n(3) 本サイトの運営を妨害する行為\n第3条（免責事項）当協会は、本サイトに掲載されている情報の正確性等について保証せず、利用者が本サイトを利用して生じた損害について一切の責任を負いません。\n第4条（準拠法・裁判管轄）本規約の解釈にあたっては、日本法を準拠法とします。",
-                modal_disclaimer_title: "免責事項",
-                modal_disclaimer_body: "当サイトに掲載されている情報の正確性には万全を期しておりますが、当協会は利用者が当サイトの情報を用いて行う一切の行為に関して、いかなる責任も負わないものとします。\n\n当協会は、予告なしに当サイトの情報を変更・削除することがあります。また、通信環境やシステムメンテナンス等により、予告なく当サイトの運営を中断または中止することがあります。あらかじめご了承ください。\n\n当サイトからリンクやバナーなどによって他のサイトに移動された場合、移動先サイトで提供される情報、サービス等について一切の責任を負いません。",
-                modal_tokushoho_title: "特定商取引法に基づく表記",
-                modal_tokushoho_body: "本サイトは商品の販売を行っておりません。実際の商品販売は、当協会が指定する外部プラットフォーム（Instagram Shop等）にて行われます。\n\n販売業者：各商品ページに記載の販売事業者\n運営統括責任者：各商品ページに記載\n所在地：各商品ページに記載\n販売価格：各商品ページに記載\n商品代金以外の必要料金：送料等（各プラットフォームの規定に準ずる）\nお支払い方法：各プラットフォームの決済方法に準ずる\n返品・交換：各プラットフォームの規定に準ずる"
+                modal_privacy_title: "プライバシーポリシー", modal_privacy_body: "日本アニメ・ゲーム協会（以下「当協会」）は、個人情報の保護に関する法律を遵守し、以下の通りプライバシーポリシーを定めます。\n\n1. 個人情報の取得：当協会は、適法かつ公正な手段をもって個人情報を取得します。\n2. 利用目的：お問い合わせへの回答、協会業務の運営・改善、マーケティング分析等に利用します。\n3. 第三者提供：法令に基づく場合を除き、本人の同意なく第三者に提供しません。\n4. 安全管理措置：個人情報の漏洩、滅失、毀損の防止その他の安全管理のために必要かつ適切な措置を講じます。\n\nお問い合わせ窓口：info@j-aga.jp",
+                modal_external_title: "外部送信方針（Cookie等）", modal_external_body: "当サイトでは、利用者の利便性向上およびサイトの改善のため、Cookie等の技術を使用し、外部の第三者（Google Analytics等）に情報を送信することがあります。\n\n送信される情報：Cookie ID、閲覧履歴、IPアドレス等\n送信先：Google LLC (Google Analytics)\n利用目的：アクセス解析、サービス改善\n\nブラウザの設定によりCookieを無効化することで、外部送信を拒否することが可能です。",
+                modal_terms_title: "サイト利用規約", modal_terms_body: "本ウェブサイト（以下「本サイト」）は、日本アニメ・ゲーム協会（以下「当協会」）が運営しています。\n\n第1条（適用）本規約は、利用者と当協会との間の本サイトの利用に関わる一切の関係に適用されます。\n第2条（禁止事項）利用者は、本サイトの利用にあたり、以下の行為をしてはなりません。\n(1) 法令または公序良俗に違反する行為\n(2) 当協会または第三者の知的財産権を侵害する行為\n(3) 本サイトの運営を妨害する行為\n第3条（免責事項）当協会は、本サイトに掲載されている情報の正確性等について保証せず、利用者が本サイトを利用して生じた損害について一切の責任を負いません。\n第4条（準拠法・裁判管轄）本規約の解釈にあたっては、日本法を準拠法とします。",
+                modal_disclaimer_title: "免責事項", modal_disclaimer_body: "当サイトに掲載されている情報の正確性には万全を期しておりますが、当協会は利用者が当サイトの情報を用いて行う一切の行為に関して、いかなる責任も負わないものとします。\n\n当協会は、予告なしに当サイトの情報を変更・削除することがあります。また、通信環境やシステムメンテナンス等により、予告なく当サイトの運営を中断または中止することがあります。あらかじめご了承ください。\n\n当サイトからリンクやバナーなどによって他のサイトに移動された場合、移動先サイトで提供される情報、サービス等について一切の責任を負いません。",
+                modal_tokushoho_title: "特定商取引法に基づく表記", modal_tokushoho_body: "本サイトは商品の販売を行っておりません。実際の商品販売は、当協会が指定する外部プラットフォーム（Instagram Shop等）にて行われます。\n\n販売業者：各商品ページに記載の販売事業者\n運営統括責任者：各商品ページに記載\n所在地：各商品ページに記載\n販売価格：各商品ページに記載\n商品代金以外の必要料金：送料等（各プラットフォームの規定に準ずる）\nお支払い方法：各プラットフォームの決済方法に準ずる\n返品・交換：各プラットフォームの規定に準ずる"
             },
             zh: {
                 nav_about: "协会概要", nav_services: "业务内容", nav_shop: "实力展柜",
                 portal_title: "日本动漫游戏协会", portal_sub: "用动漫与游戏连接世界", portal_btn: "点击进入",
-                
                 guide_text: "欢迎接入 JAGA 中央档案系统。\n我是您的向导 JAGI。由于保密协议，部分档案已加密，但我将为您展示我们最引以为傲的历程。\n\n请跟随我，向下滚动开始读取数据。",
                 guide_btn: "开始读取数据",
-                
                 head_about: "JAGA ARCHIVES", 
                 desc_about: "日本动漫游戏协会成立于2012年，协会成员包括：\n日本境内及海外游戏制作、发行、运营公司；动漫制作公司；媒体制作公司；广告公司；个人画家；动漫创作者等创作实力者。\n协会致力于整合协会成员公司或个人平台内部资源，优势互补；\n对外统一业务渠道，避免多层中间操作而引起的资源内容复杂化，以提高成员企业或个人的资源共享的有效性。\n目前累计50家成员企业，及数十名个人创作者、作家及艺术家。",
-                
                 tl_2012_t: "协会设立", tl_2012_d: "日本国内游戏与动漫制作公司、个人创作者集结。跨越行业壁垒的资源整合基石在此诞生。",
                 tl_2017_t: "跨境展开", tl_2017_d: "正式进军海外市场（以中华圈为主）。排除复杂的中间商，与当地合作伙伴建立直接的版权与本地化网络。",
                 tl_2023_t: "文化交流与实绩积累", tl_2023_d: "成功举办中日动漫游戏文化交流论坛等大规模跨文化活动。累计确立50家以上的企业网络。",
                 tl_2026_t: "向次世代升级", tl_2026_d: "构建数字档案系统。目标是为更多IP和创作者跨越国界活跃的生态系统。",
-                
                 fork_title: "身份验证完毕。请选择您希望查看的档案分类：", fork_1: "IP版权方", fork_2: "游戏开发商", fork_3: "个人创作者",
-
                 head_services: "业务内容 (SERVICES)", srv_1_t: "内容输出", srv_1_d: "海外拓展支持、本地化、宣传企划。", srv_2_t: "版权管理", srv_2_d: "海外市场日本IP的版权案件委托与企划管理。", srv_3_t: "本地化平台", srv_3_d: "与当地企业对接、市场测试、收益回收。",
                 head_shop: "实力展示 (SHOWCASE)", stat_1: "成员企业", stat_2: "授权项目", stat_3: "覆盖国家地区",
                 tab_game: "🎮 游戏授权", tab_culture: "🏮 文化交流", tab_merch: "🧸 实体周边",
                 auth_license: "官方授权", auth_partner: "合作项目", auth_event: "官方活动", auth_soldout: "已售罄",
                 game_1_t: "SALVO GAMES", game_1_m1: "合作方：SALVO GAMES", game_1_m2: "授权区域：中国大陆/东南亚",
                 game_2_t: "智能手机对战游戏", game_2_m1: "开发：Gainslink", game_2_m2: "发行：2023年起全球上线",
-                culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
-                merch_1_t: "一骑当千 关羽 1/4 手办", merch_1_d: "JAGA会员企业制造与销售实绩", merch_btn: "前往 Instagram 确认",
+                culture_1_t: "2023中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
+                merch_video_t: "一骑当千 关羽 1/4 手办 (视频版)", merch_video_d: "JAGA会员企业制造与销售实绩",
+                merch_img_t: "一骑当千 关羽 1/4 手办 (图片版)", merch_img_d: "JAGA会员企业制造与销售实绩",
+                merch_btn: "前往 Instagram 确认",
                 legal_privacy: "隐私政策", legal_external: "外部送信方针", legal_terms: "网站利用规约", legal_disclaimer: "免责事项", legal_tokushoho: "特定商取引法相关标注",
-                modal_privacy_title: "隐私政策",
-                modal_privacy_body: "日本动漫游戏协会（以下简称“本协会”）遵守《个人信息保护法》，制定如下隐私政策。\n\n1. 个人信息的获取：本协会以合法且公正的手段获取个人信息。\n2. 使用目的：用于回复咨询、协会业务运营与改善、市场分析等。\n3. 向第三方提供：除法律规定外，未经本人同意不向第三方提供。\n4. 安全管理措施：采取必要且适当的措施防止个人信息泄露、丢失或损毁。\n\n咨询窗口：info@j-aga.jp",
-                modal_external_title: "外部送信方针（Cookie等）",
-                modal_external_body: "本网站为了提升用户便利性和改善网站，使用Cookie等技术，可能会向外部第三方（如Google Analytics等）发送信息。\n\n发送的信息：Cookie ID、浏览记录、IP地址等\n发送对象：Google LLC (Google Analytics)\n使用目的：访问分析、服务改善\n\n通过浏览器设置禁用Cookie，可以拒绝外部送信。",
-                modal_terms_title: "网站利用规约",
-                modal_terms_body: "本网站（以下简称“本网站”）由日本动漫游戏协会（以下简称“本协会”）运营。\n\n第1条（适用）本规约适用于用户与本协会之间关于使用本网站的一切关系。\n第2条（禁止事项）用户在使用本网站时，不得进行以下行为：\n(1) 违反法律或公序良俗的行为\n(2) 侵犯本协会或第三方知识产权的行为\n(3) 妨碍本网站运营的行为\n第3条（免责事项）本协会不对本网站所刊载信息的准确性等作出保证，对用户因使用本网站而产生的损害不承担任何责任。\n第4条（准据法・管辖）本规约的解释以日本法为准据法。",
-                modal_disclaimer_title: "免责事项",
-                modal_disclaimer_body: "本协会虽尽力确保本网站所刊载信息的准确性，但对用户使用本网站信息所进行的一切行为不承担任何责任。\n\n本协会可能会在不事先通知的情况下更改或删除本网站的信息。此外，由于通信环境或系统维护等原因，可能会在不事先通知的情况下中断或中止本网站的运营。敬请谅解。\n\n当用户通过本网站的链接或横幅跳转到其他网站时，本协会对跳转目标网站提供的信息、服务等不承担任何责任。",
-                modal_tokushoho_title: "特定商取引法相关标注",
-                modal_tokushoho_body: "本网站不直接进行商品销售。实际商品销售在本协会指定的外部平台（如Instagram Shop等）进行。\n\n销售商：各商品页面记载的销售商\n运营统括责任人：各商品页面记载\n所在地：各商品页面记载\n销售价格：各商品页面记载\n商品价格以外的必要费用：运费等（依据各平台规定）\n支付方式：依据各平台结算方式\n退换货：依据各平台规定"
+                modal_privacy_title: "隐私政策", modal_privacy_body: "日本动漫游戏协会（以下简称“本协会”）遵守《个人信息保护法》，制定如下隐私政策。\n\n1. 个人信息的获取：本协会以合法且公正的手段获取个人信息。\n2. 使用目的：用于回复咨询、协会业务运营与改善、市场分析等。\n3. 向第三方提供：除法律规定外，未经本人同意不向第三方提供。\n4. 安全管理措施：采取必要且适当的措施防止个人信息泄露、丢失或损毁。\n\n咨询窗口：info@j-aga.jp",
+                modal_external_title: "外部送信方针（Cookie等）", modal_external_body: "本网站为了提升用户便利性和改善网站，使用Cookie等技术，可能会向外部第三方（如Google Analytics等）发送信息。\n\n发送的信息：Cookie ID、浏览记录、IP地址等\n发送对象：Google LLC (Google Analytics)\n使用目的：访问分析、服务改善\n\n通过浏览器设置禁用Cookie，可以拒绝外部送信。",
+                modal_terms_title: "网站利用规约", modal_terms_body: "本网站（以下简称“本网站”）由日本动漫游戏协会（以下简称“本协会”）运营。\n\n第1条（适用）本规约适用于用户与本协会之间关于使用本网站的一切关系。\n第2条（禁止事项）用户在使用本网站时，不得进行以下行为：\n(1) 违反法律或公序良俗的行为\n(2) 侵犯本协会或第三方知识产权的行为\n(3) 妨碍本网站运营的行为\n第3条（免责事项）本协会不对本网站所刊载信息的准确性等作出保证，对用户因使用本网站而产生的损害不承担任何责任。\n第4条（准据法・管辖）本规约的解释以日本法为准据法。",
+                modal_disclaimer_title: "免责事项", modal_disclaimer_body: "本协会虽尽力确保本网站所刊载信息的准确性，但对用户使用本网站信息所进行的一切行为不承担任何责任。\n\n本协会可能会在不事先通知的情况下更改或删除本网站的信息。此外，由于通信环境或系统维护等原因，可能会在不事先通知的情况下中断或中止本网站的运营。敬请谅解。\n\n当用户通过本网站的链接或横幅跳转到其他网站时，本协会对跳转目标网站提供的信息、服务等不承担任何责任。",
+                modal_tokushoho_title: "特定商取引法相关标注", modal_tokushoho_body: "本网站不直接进行商品销售。实际商品销售在本协会指定的外部平台（如Instagram Shop等）进行。\n\n销售商：各商品页面记载的销售商\n运营统括责任人：各商品页面记载\n所在地：各商品页面记载\n销售价格：各商品页面记载\n商品价格以外的必要费用：运费等（依据各平台规定）\n支付方式：依据各平台结算方式\n退换货：依据各平台规定"
             },
             en: {
                 nav_about: "About", nav_services: "Services", nav_shop: "Showcase",
                 portal_title: "Japan Animations Games Association", portal_sub: "Connecting the world through Anime and Games", portal_btn: "ENTER",
-                
                 guide_text: "Welcome to the JAGA Central Archives.\nI am JAGI, your guide. Due to NDAs, some files are encrypted, but I will show you our most proud journey.\n\nPlease scroll down to begin reading data.",
                 guide_btn: "Initialize Data",
-                
                 head_about: "JAGA ARCHIVES", 
                 desc_about: "The Japan Anime & Game Association was founded in 2012. Its members include:\nGame development, publishing and operating companies in Japan and overseas; anime production companies; media production companies; advertising agencies; individual illustrators; anime creators and other talented creators.\nThe association is committed to integrating internal resources from its member companies and individual platforms to achieve complementary advantages;\nIt unifies external business channels, avoids the complication of resources and content caused by multi-layer intermediate operations, and improves the effectiveness of resource sharing among member enterprises and individuals.\nAt present, it has a total of 50 member enterprises, as well as dozens of individual creators, writers and artists.",
-                
                 tl_2012_t: "Association Established", tl_2012_d: "Game and anime production companies and individual creators gathered. The foundation for cross-industry resource integration was born here.",
                 tl_2017_t: "Cross-Border Expansion", tl_2017_d: "Started full-scale entry into overseas markets (mainly Greater China). Eliminated complex middlemen to establish direct licensing and localization networks.",
                 tl_2023_t: "Cultural Exchange & Milestones", tl_2023_d: "Successfully held large-scale cross-cultural events like the China-Japan ACG Forum. Established a network of over 50 enterprises.",
                 tl_2026_t: "Next-Gen Update", tl_2026_d: "Building a digital archive system. Aiming for an ecosystem where more IPs and creators can thrive across borders.",
-                
                 fork_title: "Identity verified. Please select the archive category you wish to view:", 
-                fork_1: "IP Holder", 
-                fork_2: "Game Developer", 
-                fork_3: "Creator",
-
+                fork_1: "IP Holder", fork_2: "Game Developer", fork_3: "Creator",
                 head_services: "SERVICES", srv_1_t: "Content Export", srv_1_d: "Overseas expansion support, localization, and promotion planning.", srv_2_t: "Licensing", srv_2_d: "Copyright management and supervision for Japanese IP in overseas markets.", srv_3_t: "Localization", srv_3_d: "Local enterprise matching, market testing, and revenue collection.",
                 head_shop: "SHOWCASE", stat_1: "Members", stat_2: "Projects", stat_3: "Countries",
                 tab_game: "🎮 Game Licensing", tab_culture: "🏮 Culture Exchange", tab_merch: "🧸 Merchandise",
                 auth_license: "Official License", auth_partner: "Partner Project", auth_event: "Official Event", auth_soldout: "SOLD OUT",
                 game_1_t: "SALVO GAMES", game_1_m1: "Partner: SALVO Games", game_1_m2: "Authorized Region: Chinese Mainland / Southeast Asia",
                 game_2_t: "Mobile Battle Game", game_2_m1: "Dev: Gainslink", game_2_m2: "Launch: Global from 2023",
-                culture_1_t: "China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
-                merch_1_t: "Kanwu Itsukitousen 1/4 Scale Figure", merch_1_d: "Manufactured and sold by JAGA member", merch_btn: "Check on Instagram",
+                culture_1_t: "2023 China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
+                merch_video_t: "Ikkitousen Kanu 1/4 Scale Figure (Video)", merch_video_d: "Manufactured and sold by JAGA member",
+                merch_img_t: "Ikkitousen Kanu 1/4 Scale Figure (Image)", merch_img_d: "Manufactured and sold by JAGA member",
+                merch_btn: "Check on Instagram",
                 legal_privacy: "Privacy Policy", legal_external: "External Transmission", legal_terms: "Terms of Use", legal_disclaimer: "Disclaimer", legal_tokushoho: "Commercial Disclosure",
-                modal_privacy_title: "Privacy Policy",
-                modal_privacy_body: "Japan Animations Games Association (hereinafter \"the Association\") complies with the Act on the Protection of Personal Information and establishes the following Privacy Policy.\n\n1. Acquisition: The Association acquires personal information by lawful and fair means.\n2. Purpose of Use: To respond to inquiries, operate and improve association business, and conduct marketing analysis.\n3. Provision to Third Parties: We will not provide personal information to third parties without consent, except as required by law.\n4. Security Measures: We will take necessary and appropriate measures to prevent leakage, loss, or damage of personal information.\n\nContact: info@j-aga.jp",
-                modal_external_title: "External Transmission Policy (Cookies, etc.)",
-                modal_external_body: "This site uses cookies and similar technologies to improve user convenience and site performance, and may transmit information to external third parties (such as Google Analytics).\n\nInformation transmitted: Cookie ID, browsing history, IP address, etc.\nDestination: Google LLC (Google Analytics)\nPurpose: Access analysis, service improvement\n\nYou can refuse external transmission by disabling cookies in your browser settings.",
-                modal_terms_title: "Terms of Use",
-                modal_terms_body: "This website (hereinafter \"the Site\") is operated by Japan Animations Games Association (hereinafter \"the Association\").\n\nArticle 1 (Application) These Terms apply to all relationships between users and the Association regarding the use of the Site.\nArticle 2 (Prohibitions) Users shall not engage in the following acts:\n(1) Acts violating laws or public order and morals\n(2) Acts infringing the intellectual property rights of the Association or third parties\n(3) Acts interfering with the operation of the Site\nArticle 3 (Disclaimer) The Association does not guarantee the accuracy of the information on the Site and assumes no responsibility for any damages incurred by users using the Site.\nArticle 4 (Governing Law) These Terms shall be governed by and construed in accordance with the laws of Japan.",
-                modal_disclaimer_title: "Disclaimer",
-                modal_disclaimer_body: "While the Association makes every effort to ensure the accuracy of the information on this site, it assumes no responsibility for any actions taken by users using the information.\n\nThe Association may change or delete information on this site without prior notice. The operation of this site may also be interrupted or discontinued without prior notice due to communication environment or system maintenance. Please understand in advance.\n\nThe Association assumes no responsibility for information or services provided on linked sites.",
-                modal_tokushoho_title: "Commercial Disclosure",
-                modal_tokushoho_body: "This website does not directly sell products. Actual product sales are conducted on external platforms designated by the Association (e.g., Instagram Shop).\n\nSeller: Seller listed on each product page\nPerson in charge: Listed on each product page\nLocation: Listed on each product page\nPrice: Listed on each product page\nAdditional fees: Shipping, etc. (per platform rules)\nPayment method: Per platform rules\nReturns: Per platform rules"
+                modal_privacy_title: "Privacy Policy", modal_privacy_body: "Japan Animations Games Association (hereinafter \"the Association\") complies with the Act on the Protection of Personal Information and establishes the following Privacy Policy.\n\n1. Acquisition: The Association acquires personal information by lawful and fair means.\n2. Purpose of Use: To respond to inquiries, operate and improve association business, and conduct marketing analysis.\n3. Provision to Third Parties: We will not provide personal information to third parties without consent, except as required by law.\n4. Security Measures: We will take necessary and appropriate measures to prevent leakage, loss, or damage of personal information.\n\nContact: info@j-aga.jp",
+                modal_external_title: "External Transmission Policy (Cookies, etc.)", modal_external_body: "This site uses cookies and similar technologies to improve user convenience and site performance, and may transmit information to external third parties (such as Google Analytics).\n\nInformation transmitted: Cookie ID, browsing history, IP address, etc.\nDestination: Google LLC (Google Analytics)\nPurpose: Access analysis, service improvement\n\nYou can refuse external transmission by disabling cookies in your browser settings.",
+                modal_terms_title: "Terms of Use", modal_terms_body: "This website (hereinafter \"the Site\") is operated by Japan Animations Games Association (hereinafter \"the Association\").\n\nArticle 1 (Application) These Terms apply to all relationships between users and the Association regarding the use of the Site.\nArticle 2 (Prohibitions) Users shall not engage in the following acts:\n(1) Acts violating laws or public order and morals\n(2) Acts infringing the intellectual property rights of the Association or third parties\n(3) Acts interfering with the operation of the Site\nArticle 3 (Disclaimer) The Association does not guarantee the accuracy of the information on the Site and assumes no responsibility for any damages incurred by users using the Site.\nArticle 4 (Governing Law) These Terms shall be governed by and construed in accordance with the laws of Japan.",
+                modal_disclaimer_title: "Disclaimer", modal_disclaimer_body: "While the Association makes every effort to ensure the accuracy of the information on this site, it assumes no responsibility for any actions taken by users using the information.\n\nThe Association may change or delete information on this site without prior notice. The operation of this site may also be interrupted or discontinued without prior notice due to communication environment or system maintenance. Please understand in advance.\n\nThe Association assumes no responsibility for information or services provided on linked sites.",
+                modal_tokushoho_title: "Commercial Disclosure", modal_tokushoho_body: "This website does not directly sell products. Actual product sales are conducted on external platforms designated by the Association (e.g., Instagram Shop).\n\nSeller: Seller listed on each product page\nPerson in charge: Listed on each product page\nLocation: Listed on each product page\nPrice: Listed on each product page\nAdditional fees: Shipping, etc. (per platform rules)\nPayment method: Per platform rules\nReturns: Per platform rules"
             }
         };
 
@@ -617,9 +602,7 @@
             }, 600);
         }
 
-        // 向导交互系统
         let typeWriterTimer;
-
         function showGuide() {
             const overlay = document.getElementById('guide-overlay');
             const textEl = document.getElementById('guide-text');
@@ -654,7 +637,6 @@
             }, 500);
         }
 
-        // 时间线滚动动画
         function initTimelineObserver() {
             const items = document.querySelectorAll('.timeline-item');
             const progressBar = document.getElementById('timeline-progress');
