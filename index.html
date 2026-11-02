@@ -20,10 +20,9 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            /* 核心修复：优先使用系统原生中文字体，保证粗细绝对均匀 */
+            /* 核心：优先系统原生中文字体，保证绝对平整不粗糙 */
             font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, "Noto Sans SC", "Noto Sans JP", sans-serif;
             overflow-x: hidden;
-            /* 开启字体抗锯齿，消除毛边 */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
@@ -77,51 +76,16 @@
         @keyframes beamBurst { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(5); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(20); opacity: 0; } }
 
         /* ================= 核心新增：向导系统 (Guide Overlay) ================= */
-        .guide-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 5, 10, 0.85); backdrop-filter: blur(8px);
-            z-index: 1500; display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
-        }
+        .guide-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 10, 0.85); backdrop-filter: blur(8px); z-index: 1500; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         .guide-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        .guide-box {
-            background: rgba(10, 15, 20, 0.95);
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(57, 197, 187, 0.3), inset 0 0 20px rgba(57, 197, 187, 0.1);
-            width: 90%; max-width: 600px; padding: 40px 30px; position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-        }
-        
-        /* 向导 JAGI 形象 */
-        .guide-avatar {
-            width: 60px; height: 60px; background: var(--neon-cyan);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            margin-bottom: 20px; animation: float 3s ease-in-out infinite;
-            box-shadow: 0 0 20px var(--neon-cyan);
-            position: relative;
-        }
-        .guide-avatar::after {
-            content: ''; position: absolute; top: 15px; left: 15px; width: 30px; height: 10px;
-            background: #000; border-radius: 2px;
-        }
+        .guide-box { background: rgba(10, 15, 20, 0.95); border: 2px solid var(--neon-cyan); box-shadow: 0 0 30px rgba(57, 197, 187, 0.3), inset 0 0 20px rgba(57, 197, 187, 0.1); width: 90%; max-width: 600px; padding: 40px 30px; position: relative; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .guide-avatar { width: 60px; height: 60px; background: var(--neon-cyan); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); margin-bottom: 20px; animation: float 3s ease-in-out infinite; box-shadow: 0 0 20px var(--neon-cyan); position: relative; }
+        .guide-avatar::after { content: ''; position: absolute; top: 15px; left: 15px; width: 30px; height: 10px; background: #000; border-radius: 2px; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        .guide-text {
-            color: var(--neon-cyan); font-size: 1.1rem; line-height: 1.8;
-            font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif; 
-            min-height: 80px; text-align: left; width: 100%; margin-bottom: 20px;
-        }
+        .guide-text { color: var(--neon-cyan); font-size: 1.1rem; line-height: 1.8; font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif; min-height: 80px; text-align: left; width: 100%; margin-bottom: 20px; }
         .guide-text::after { content: '|'; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-
-        .guide-btn {
-            background: transparent; border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan); padding: 10px 30px; font-size: 1rem; font-weight: bold;
-            transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            opacity: 0; pointer-events: none;
-        }
+        .guide-btn { background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); padding: 10px 30px; font-size: 1rem; font-weight: bold; transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); opacity: 0; pointer-events: none; }
         .guide-btn.show { opacity: 1; pointer-events: auto; }
         .guide-btn:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
 
@@ -133,47 +97,18 @@
 
         /* --- 进阶：时间线 (Timeline) 样式 --- */
         .timeline-section { position: relative; padding: 40px 0; overflow: hidden; }
-        .timeline-track {
-            position: absolute; top: 0; left: 20px; width: 4px; height: 100%;
-            background: rgba(57, 197, 187, 0.1);
-        }
-        .timeline-progress {
-            position: absolute; top: 0; left: 0; width: 100%; height: 0%;
-            background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan);
-            transition: height 0.1s ease-out;
-        }
-        .timeline-item {
-            position: relative; padding-left: 60px; margin-bottom: 60px;
-            opacity: 0; transform: translateY(30px); transition: all 0.8s ease;
-        }
+        .timeline-track { position: absolute; top: 0; left: 20px; width: 4px; height: 100%; background: rgba(57, 197, 187, 0.1); }
+        .timeline-progress { position: absolute; top: 0; left: 0; width: 100%; height: 0%; background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); transition: height 0.1s ease-out; }
+        .timeline-item { position: relative; padding-left: 60px; margin-bottom: 60px; opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
         .timeline-item.active { opacity: 1; transform: translateY(0); }
-        .timeline-dot {
-            position: absolute; left: 12px; top: 0; width: 20px; height: 20px;
-            background: var(--bg-color); border: 3px solid var(--neon-cyan);
-            border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan);
-            transition: all 0.3s;
-        }
-        .timeline-item.active .timeline-dot {
-            background: var(--neon-cyan); box-shadow: 0 0 25px var(--neon-cyan);
-        }
-        .timeline-year {
-            font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900;
-            color: var(--neon-cyan); text-shadow: 0 0 10px rgba(57, 197, 187, 0.5); margin-bottom: 10px;
-        }
-        .timeline-content {
-            background: var(--card-bg); border: 1px solid rgba(57, 197, 187, 0.2);
-            padding: 20px; border-radius: 4px; backdrop-filter: blur(5px);
-        }
+        .timeline-dot { position: absolute; left: 12px; top: 0; width: 20px; height: 20px; background: var(--bg-color); border: 3px solid var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); transition: all 0.3s; }
+        .timeline-item.active .timeline-dot { background: var(--neon-cyan); box-shadow: 0 0 25px var(--neon-cyan); }
+        .timeline-year { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--neon-cyan); text-shadow: 0 0 10px rgba(57, 197, 187, 0.5); margin-bottom: 10px; }
+        .timeline-content { background: var(--card-bg); border: 1px solid rgba(57, 197, 187, 0.2); padding: 20px; border-radius: 4px; backdrop-filter: blur(5px); }
 
         /* 身份选择 */
         .fork-container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
-        .fork-btn {
-            background: rgba(15, 15, 25, 0.8); border: 1px solid var(--neon-cyan);
-            color: var(--text-main); padding: 20px 40px; font-size: 1.1rem; font-weight: bold;
-            /* 专门针对按钮的中文字体修复 */
-            font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif;
-            transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-        }
+        .fork-btn { background: rgba(15, 15, 25, 0.8); border: 1px solid var(--neon-cyan); color: var(--text-main); padding: 20px 40px; font-size: 1.1rem; font-weight: bold; font-family: "PingFang SC", "Microsoft YaHei", 'Noto Sans JP', sans-serif; transition: all 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .fork-btn:hover { background: rgba(57, 197, 187, 0.2); box-shadow: 0 0 20px rgba(57, 197, 187, 0.4); transform: translateY(-5px); }
 
         /* 隐藏的 SEO 文本 */
@@ -208,9 +143,32 @@
         .card:hover { border-color: var(--neon-pink); box-shadow: 0 0 30px rgba(255, 61, 127, 0.2); transform: translateY(-5px); }
         .card:hover::before { transform: scaleX(1); }
         .card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; margin-top: 10px; }
-        .product-image { background: rgba(0,0,0,0.5); height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px; border: 1px dashed rgba(57, 197, 187, 0.3); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); position: relative; overflow: hidden; }
-        .product-image::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-25deg); transition: 0.5s; }
+        
+        /* ====== 图片核心样式 ====== */
+        .product-image { 
+            background: rgba(0,0,0,0.5); height: 180px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: var(--neon-cyan); font-weight: bold; margin-bottom: 15px; 
+            border: 1px dashed rgba(57, 197, 187, 0.3); 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); 
+            position: relative; overflow: hidden; 
+        }
+        /* 图片铺满自适应 */
+        .product-image img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 1; transition: transform 0.5s ease;
+        }
+        .card:hover .product-image img { transform: scale(1.08); }
+        /* 扫光层必须在图片之上 */
+        .product-image::after { 
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; 
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent); 
+            transform: skewX(-25deg); transition: 0.5s; z-index: 2; 
+        }
         .card:hover .product-image::after { left: 100%; }
+        /* 如果图片没加载出来，文字会显示在中间 */
+        .product-image span { z-index: 3; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
         .badge { background: rgba(255, 61, 127, 0.2); color: var(--neon-pink); padding: 4px 10px; font-size: 0.8rem; border: 1px solid var(--neon-pink); display: inline-block; font-weight: bold; }
         .badge-cyan { background: rgba(57, 197, 187, 0.2); color: var(--neon-cyan); border-color: var(--neon-cyan); }
         .card-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
@@ -296,15 +254,13 @@
         <div class="portal-gate" id="portal-gate">
             <h1 class="portal-title" id="portal-title">日本アニメ・ゲーム協会</h1>
             <p class="portal-subtitle" id="portal-subtitle">アニメとゲームで、世界をつなぐ</p>
-            <!-- 点击进入直接触发向导 -->
             <a class="portal-button" onclick="showGuide()" data-i18n="portal_btn">サイトへ入る</a>
         </div>
     </div>
 
-    <!-- ================= 全屏向导系统 ================= -->
+    <!-- 向导系统 -->
     <div class="guide-overlay" id="guide-overlay">
         <div class="guide-box">
-            <!-- 纯 CSS 画的像素风向导 JAGI -->
             <div class="guide-avatar"></div>
             <div class="guide-text" id="guide-text"></div>
             <button class="guide-btn" id="guide-btn" onclick="closeGuide()" data-i18n="guide_btn">データ読み込み開始</button>
@@ -312,18 +268,15 @@
     </div>
 
     <main id="main" class="site-content">
-        <!-- 叙事主线：档案时间线 -->
+        <!-- 时间线 -->
         <section id="archives" class="section timeline-section">
             <h2 class="neon-heading" data-i18n="head_about">JAGA ARCHIVES</h2>
-            
-            <!-- 隐藏的 SEO 文本 -->
             <p class="sr-only" data-i18n="desc_about"></p>
 
             <div class="timeline-track">
                 <div class="timeline-progress" id="timeline-progress"></div>
             </div>
 
-            <!-- 时间线节点 -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
                 <div class="timeline-year">2012</div>
@@ -344,7 +297,7 @@
 
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-year">2023</div>
+                <div class="timeline-year">2018</div>
                 <div class="timeline-content">
                     <h3 data-i18n="tl_2023_t">文化交流と実績の蓄積</h3>
                     <p data-i18n="tl_2023_d">中日アニメ・ゲーム文化交流フォーラムの主催など、大規模なクロスカルチャーイベントを成功裡に実施。累計50社以上の企業ネットワークが確立。</p>
@@ -360,7 +313,7 @@
                 </div>
             </div>
 
-            <!-- 加入企业Logo墙（保留） -->
+            <!-- 企业 Logo 墙 -->
             <div class="logo-marquee">
                 <div class="logo-track">
                     <span class="logo-item">WOODS CORPORATIONS</span>
@@ -370,7 +323,6 @@
                     <span class="logo-item">HASH FUTURE</span>
                     <span class="logo-item">Gainslink</span>
                     <span class="logo-item">MAHA</span>
-                    <!-- 重复 -->
                     <span class="logo-item">WOODS CORPORATIONS</span>
                     <span class="logo-item">SALVO GAMES</span>
                     <span class="logo-item">NANJIN STUDIO</span>
@@ -381,7 +333,7 @@
                 </div>
             </div>
 
-            <!-- 身份选择分支 (Forking) -->
+            <!-- 身份选择 -->
             <div style="text-align: center; margin-top: 60px;">
                 <h3 style="color: var(--neon-cyan); margin-bottom: 20px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;" data-i18n="fork_title">身份验证完毕。请选择您希望查看的档案分类：</h3>
                 <div class="fork-container">
@@ -418,16 +370,23 @@
                 <button class="tab-btn" onclick="switchTab('merch')" data-i18n="tab_merch"></button>
             </div>
 
+            <!-- 游戏授权 Tab -->
             <div id="tab-game" class="tab-content active">
                 <div class="grid-3">
                     <div class="card">
-                        <div class="product-image"><span>[ Game Visual ]</span></div>
+                        <!-- 替换为真实图片 SALVO.jpg -->
+                        <div class="product-image">
+                            <img src="SALVO.jpg" alt="SALVO GAMES">
+                        </div>
                         <span class="badge" data-i18n="auth_license"></span>
                         <h3 data-i18n="game_1_t"></h3>
                         <div class="card-meta"><div data-i18n="game_1_m1"></div><div data-i18n="game_1_m2"></div></div>
                     </div>
                     <div class="card">
-                        <div class="product-image"><span>[ Game Visual ]</span></div>
+                        <!-- 替换为真实图片 Gainslink.jpg -->
+                        <div class="product-image">
+                            <img src="Gainslink.jpg" alt="Gainslink">
+                        </div>
                         <span class="badge badge-cyan" data-i18n="auth_partner"></span>
                         <h3 data-i18n="game_2_t"></h3>
                         <div class="card-meta"><div data-i18n="game_2_m1"></div><div data-i18n="game_2_m2"></div></div>
@@ -435,10 +394,14 @@
                 </div>
             </div>
 
+            <!-- 文化交流 Tab -->
             <div id="tab-culture" class="tab-content">
                 <div class="grid-3">
                     <div class="card">
-                        <div class="product-image" style="color: #FF3D7F;"><span>[ Event Photo ]</span></div>
+                        <!-- 替换为真实图片 event1.jpg -->
+                        <div class="product-image">
+                            <img src="event1.jpg" alt="文化交流论坛">
+                        </div>
                         <span class="badge" data-i18n="auth_event"></span>
                         <h3 data-i18n="culture_1_t"></h3>
                         <div class="card-meta"><div data-i18n="culture_1_m1"></div><div data-i18n="culture_1_m2"></div></div>
@@ -446,10 +409,12 @@
                 </div>
             </div>
 
+            <!-- 实体周边 Tab -->
             <div id="tab-merch" class="tab-content">
                 <div class="grid-3">
                     <div class="card">
-                        <div class="product-image"><span>[ Figure Photo ]</span></div>
+                        <!-- 这块你还没传图，保留占位文字 -->
+                        <div class="product-image"><span>[ 待上传手办图 ]</span></div>
                         <span class="badge" data-i18n="auth_soldout"></span>
                         <h3 data-i18n="merch_1_t"></h3>
                         <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 0;" data-i18n="merch_1_d"></p>
@@ -460,6 +425,7 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">JAGA</div>
@@ -513,7 +479,7 @@
                 tab_game: "🎮 ゲームライセンス", tab_culture: "🏮 文化交流", tab_merch: "🧸 グッズ・フィギュア",
                 auth_license: "公式ライセンス", auth_partner: "提携プロジェクト", auth_event: "公式イベント", auth_soldout: "完売御礼",
                 game_1_t: "SALVO GAMES", game_1_m1: "協力：SALVO GAMES", game_1_m2: "授権地域：中国・東南アジア",
-                game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：NANJINスタジオ", game_2_m2: "展開：2023年より全世界",
+                game_2_t: "スマートフォン向け対戦ゲーム", game_2_m1: "開発：Gainslink", game_2_m2: "展開：2023年より全世界",
                 culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主催：JAGA / 福建", culture_1_m2: "来場者数：500名以上",
                 merch_1_t: "一騎当千 関羽 1/4スケールフィギュア", merch_1_d: "JAGA会員企業による製造・販売実績", merch_btn: "Instagramで詳細確認",
                 legal_privacy: "プライバシーポリシー", legal_external: "外部送信方針", legal_terms: "サイト利用規約", legal_disclaimer: "免責事項", legal_tokushoho: "特定商取引法に基づく表記",
@@ -550,7 +516,7 @@
                 tab_game: "🎮 游戏授权", tab_culture: "🏮 文化交流", tab_merch: "🧸 实体周边",
                 auth_license: "官方授权", auth_partner: "合作项目", auth_event: "官方活动", auth_soldout: "已售罄",
                 game_1_t: "SALVO GAMES", game_1_m1: "合作方：SALVO GAMES", game_1_m2: "授权区域：中国大陆/东南亚",
-                game_2_t: "智能手机对战游戏", game_2_m1: "开发：南进工作室", game_2_m2: "发行：2023年起全球上线",
+                game_2_t: "智能手机对战游戏", game_2_m1: "开发：Gainslink", game_2_m2: "发行：2023年起全球上线",
                 culture_1_t: "中日动漫文化交流论坛", culture_1_m1: "主办：JAGA / 福建", culture_1_m2: "参会人数：500人以上",
                 merch_1_t: "一骑当千 关羽 1/4 手办", merch_1_d: "JAGA会员企业制造与销售实绩", merch_btn: "前往 Instagram 确认",
                 legal_privacy: "隐私政策", legal_external: "外部送信方针", legal_terms: "网站利用规约", legal_disclaimer: "免责事项", legal_tokushoho: "特定商取引法相关标注",
@@ -590,7 +556,7 @@
                 tab_game: "🎮 Game Licensing", tab_culture: "🏮 Culture Exchange", tab_merch: "🧸 Merchandise",
                 auth_license: "Official License", auth_partner: "Partner Project", auth_event: "Official Event", auth_soldout: "SOLD OUT",
                 game_1_t: "SALVO GAMES", game_1_m1: "Partner: SALVO Games", game_1_m2: "Authorized Region: Chinese Mainland / Southeast Asia",
-                game_2_t: "Mobile Battle Game", game_2_m1: "Dev: NANJIN Studio", game_2_m2: "Launch: Global from 2023",
+                game_2_t: "Mobile Battle Game", game_2_m1: "Dev: Gainslink", game_2_m2: "Launch: Global from 2023",
                 culture_1_t: "China-Japan ACG Culture Forum", culture_1_m1: "Host: JAGA / Fujian", culture_1_m2: "Attendees: 500+",
                 merch_1_t: "Kanwu Itsukitousen 1/4 Scale Figure", merch_1_d: "Manufactured and sold by JAGA member", merch_btn: "Check on Instagram",
                 legal_privacy: "Privacy Policy", legal_external: "External Transmission", legal_terms: "Terms of Use", legal_disclaimer: "Disclaimer", legal_tokushoho: "Commercial Disclosure",
@@ -651,7 +617,7 @@
             }, 600);
         }
 
-        // ================= 向导交互系统 =================
+        // 向导交互系统
         let typeWriterTimer;
 
         function showGuide() {
@@ -688,7 +654,7 @@
             }, 500);
         }
 
-        // ================= 时间线滚动动画 =================
+        // 时间线滚动动画
         function initTimelineObserver() {
             const items = document.querySelectorAll('.timeline-item');
             const progressBar = document.getElementById('timeline-progress');
